@@ -1,0 +1,207 @@
+﻿@model ServiceManager.Models.WorkOrder
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<hr />
+
+<h4>Create Service Request</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post" enctype="multipart/form-data" id="form1">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Property_Address" class="control-label">Property Address:</label>
+                <input asp-for="Property_Address" class="form-control" />
+                <span asp-validation-for="Property_Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Floor" class="control-label">Floor #:</label>
+                <input asp-for="Floor" class="form-control" />
+                <span asp-validation-for="Floor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Unit" class="control-label">Unit #:</label>
+                <input asp-for="Unit" class="form-control" />
+                <span asp-validation-for="Unit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WorkServiceName" class="control-label">Work Service Name:</label>
+                <input asp-for="WorkServiceName" class="form-control" />
+                <span asp-validation-for="WorkServiceName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WorkService_Description" class="control-label">Work Service Description:</label>
+                <textarea text-wrap="normal" type="text" placeholder="Please add your decription here" asp-for="WorkService_Description" class="form-control"></textarea>
+                <span asp-validation-for="WorkService_Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RequestedBy" class="control-label">Requested By:</label>
+                <input asp-for="RequestedBy" value="@ViewBag.CurUser" readonly="readonly" class="form-control" />
+                <span asp-validation-for="RequestedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Requested_Date" class="control-label">Date Requested:</label>
+                <input asp-for="Requested_Date" class="form-control" />
+                <span asp-validation-for="Requested_Date" class="text-danger"></span>
+            </div>
+            Assign Contractor: <select name="Contractor" id="ContractorID" asp-items="@ViewBag.UserList" onchange="SelectedValue()"></select>
+
+            <div class="form-group">
+                <label asp-for="Contractor_Assigned" class="control-label">Contractor Assigned:</label>
+                <input readonly="readonly" asp-for="Contractor_Assigned" id="Contractortxt" class="form-control" />
+                <span asp-validation-for="Contractor_Assigned" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Service_Status" class="control-label">Service Status:</label>
+                <input asp-for="Service_Status" class="form-control" value="Initialized" readonly="readonly" />
+                <span asp-validation-for="Service_Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FolderUrl" class="control-label">Image Folder Name:</label>
+                <input asp-for="FolderUrl" id="FolderUrl" class="form-control" onchange="checkFolderName()" />
+                <span asp-validation-for="FolderUrl" class="text-danger"></span>
+            </div>
+            <label style="display:none" id="FolderValid">Image Folder Name Already Exist! <br /> Please, use different name.</label>
+            <div class="form-group">
+                <fieldset id="group1">
+                    <label for="ImageChoice1">Submit without an Image:</label>
+                    <input type="radio" id="ImageChoice1" name="ImageChoice1" value="1" checked="checked" onclick="showHideUpload()" />
+                    <label for="ImageChoice2">Submit with an Image:</label>
+                    <input type="radio" id="ImageChoice2" name="ImageChoice2" value="2" onclick="showHideUpload1()" />
+                </fieldset>
+            </div>
+            <div>@ViewBag.p</div>
+            <div>@ViewBag.uploaderror</div>
+            <div id="withoutImg"></div>
+            <div class="form-group" id="withImg" style="display:none">
+                <div class="form-group" id="withImg">
+                    <div>
+                        <label class="control-label" for="file">Select Image or Blueprint To Upload: </label>
+                        <input type="file" id="file" name="selectFile" class="btn btn-primary" accept="image/gif, image/jpeg,image/jpg, image/pdf, image/png" onchange="DisplayFilesToUpload()" />
+                    </div>
+                </div>
+                <p id="FilesToUpload"></p>
+                <p>
+                    <img src="" id="profile-img-tag" width="200" />
+                </p>
+                <div class="form-group">
+                    <p id="FilesToUpload"></p>
+                </div>
+            </div>
+            <div class="form-group" id="submitcreate">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+        var firebaseConfig = {
+            apiKey: "AIzaSyAjymOpaYO_3qaAs-2NUD1h3litYcmczXk",
+            authDomain: "testarmin.firebaseapp.com",
+            storageBucket: "testarmin.appspot.com",
+        };
+        firebase.initializeApp(firebaseConfig);
+        console.log(apiKey);
+    });
+
+    async function checkFolderName() {
+        var eve = document.getElementById("FolderUrl").value;
+        var x = document.getElementById("FolderValid");
+        var storageRef = await firebase.storage().ref(eve + "/").listAll();
+        if (storageRef.items.length > 0) {
+            x.style.display = "block";
+            x.style.backgroundColor = "yellow";
+            x.style.color = "red";
+            document.getElementById('submitcreate').setAttribute('hidden', true);
+        }
+        else {
+            x.style.display = "none";
+            document.getElementById('submitcreate').removeAttribute("hidden");
+
+        }
+    }
+
+
+
+</script>
+<script type="text/javascript">
+    function showHideUpload() {
+        var x = document.getElementById("withImg");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+        var x1 = document.getElementById("withoutImg");
+        if (x1.style.display === "block") {
+            x1.style.display = "none";
+        } else {
+            x1.style.display = "block";
+        }
+        document.getElementById('ImageChoice2').checked = false;
+        document.getElementById('ImageChoice1').checked = true;
+    }
+    function showHideUpload1() {
+        var x = document.getElementById("withoutImg");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+        var x1 = document.getElementById("withImg");
+        if (x1.style.display === "block") {
+            x1.style.display = "none";
+        } else {
+            x1.style.display = "block";
+        }
+        document.getElementById('ImageChoice1').checked = false;
+        document.getElementById('ImageChoice2').checked = true;
+    }
+
+
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#profile-img-tag').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function DisplayFilesToUpload() {
+        var element = document.getElementById("file");
+        var html = "";
+        html = "<b>Upload to gallery: </b>";
+        document.getElementById("FilesToUpload").innerHTML = html;
+        readURL(element);
+    }
+    function SelectedValue() {
+        //Selected text of dropdownlist
+        var seText = $("#ContractorID option:selected").val();
+        document.getElementById("Contractortxt").value = seText;
+    }
+
+</script>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.1/jquery.form.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

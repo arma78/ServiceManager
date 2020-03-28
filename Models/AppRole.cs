@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ServiceManager.Models
 {
-    public class AppRole : IdentityRole<string>
+    public class AppRole : IdentityRole<int>
     {
         public AppRole() { }
 

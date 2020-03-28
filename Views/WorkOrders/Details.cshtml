@@ -1,0 +1,172 @@
+﻿@model ServiceManager.Models.WorkOrder
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<hr />
+<div>
+    <h4>Work Order Request Details</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+           Property Address:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Property_Address)
+        </dd>
+        <dt class="col-sm-2">
+           Floor #:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Floor)
+        </dd>
+        <dt class="col-sm-2">
+           Unit #:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Unit)
+        </dd>
+        <dt class="col-sm-2">
+           Work Service Name:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WorkServiceName)
+        </dd>
+        <dt class="col-sm-2">
+          Work Service Description:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WorkService_Description)
+        </dd>
+        <dt class="col-sm-2">
+            Requested By:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RequestedBy)
+        </dd>
+        <dt class="col-sm-2">
+           Date Requested:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Requested_Date)
+        </dd>
+        <dt class="col-sm-2">
+           Contractor Assigned:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contractor_Assigned)
+        </dd>
+        <dt class="col-sm-2">
+           Contractor Comments:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contractor_Comments)
+        </dd>
+        <dt class="col-sm-2">
+            Contractor Start Date:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contractor_Start_Date)
+        </dd>
+        <dt class="col-sm-2">
+            Contractor Completion Date:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contractor_Completion_Date)
+        </dd>
+        <dt class="col-sm-2">
+           Service Status:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Service_Status)
+        </dd>
+        <dt class="col-sm-2">
+          Storage Folder Name:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FolderUrl)
+        </dd>
+        <dt class="col-sm-2">
+          Inspected By:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Inspected_By)
+        </dd>
+        <dt class="col-sm-2">
+          Date Inspected:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Date_Inspected)
+        </dd>
+        <dt class="col-sm-2">
+          Inspection Comments:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Inspection_Comments)
+        </dd>
+    </dl>
+</div>
+
+
+<section class="gallery-block cards-gallery">
+    <div class="container">
+        <div class="heading">
+            <h2>Image Gallery</h2>
+        </div>
+        <div class="row" id="gallery">
+        </div>
+    </div>
+</section>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.WorkServiceID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script type="text/javascript">
+             $(document).ready(function ()
+                {
+                    var firebaseConfig = {
+                    apiKey: "AIzaSyAjymOpaYO_3qaAs-2NUD1h3litYcmczXk",
+                    authDomain: "testarmin.firebaseapp.com",
+                    databaseURL: "https://testarmin.firebaseio.com",
+                    storageBucket: "testarmin.appspot.com",
+                };
+            firebase.initializeApp(firebaseConfig);
+
+        // Get a reference to the storage service, which is used to create references in your storage bucket
+        var eve = @Html.Raw(Json.Serialize(Model.FolderUrl));
+                 var storageRef = firebase.storage().ref(eve + "/");
+
+        console.log(storageRef.listAll());
+        storageRef.listAll().then(function (result) {
+            result.items.forEach(function (imageRef) {
+                imageRef.getDownloadURL().then(function (url) {
+
+                      let urlimg = url;
+                             let name = urlimg.substr(urlimg.indexOf('%2F') + 3, (urlimg.indexOf('?')) - (urlimg.indexOf('%2F') + 3));
+                             name = name.replace('%20', ' ');
+                             var extension = name.substr((name.lastIndexOf('.') + 1));
+                             if (extension == 'txt') {
+                                 $("#gallery").append("<div class='col-md-3 col-lg-2 col-sm-4'><div class='card border-0 transform-on-hover'><a href='" + url + "' class='lightbox'><img src='/images/text.png' alt='...'  max-width='250' class='card-img-top'></a></div></div>")
+                             }
+                             else if (extension == 'pdf') {
+                                 $("#gallery").append("<div class='col-md-3 col-lg-2 col-sm-4'><div class='card border-0 transform-on-hover'><a href='" + url + "' class='lightbox'><img src='/images/pdfimg.png' alt='...'  max-width='250' class='card-img-top'></a></div></div>")
+                             }
+                             else {
+                                 $("#gallery").append("<div class='col-md-3 col-lg-2 col-sm-4'><div class='card border-0 transform-on-hover'><a href='" + url + "' class='lightbox''><img src='" + url + "' alt='...'  max-width='250' class='card-img-top'></a></div></div>")
+                             }
+
+
+                }).catch(function (error) {
+                    alert(error);
+                });
+            });
+        }).
+            catch(function (error) {
+        });
+    });
+</script>

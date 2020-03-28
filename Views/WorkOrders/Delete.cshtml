@@ -1,0 +1,207 @@
+﻿@model ServiceManager.Models.WorkOrder
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<br />
+<hr />
+
+<div>
+    <h4>Are you sure you want to delete this Service Request?</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+           Property Address:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Property_Address)
+        </dd>
+        <dt class="col-sm-2">
+           Floor #:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Floor)
+        </dd>
+        <dt class="col-sm-2">
+           Unit #:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Unit)
+        </dd>
+        <dt class="col-sm-2">
+           Work Service Name:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WorkServiceName)
+        </dd>
+        <dt class="col-sm-2">
+          Work Service Description:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WorkService_Description)
+        </dd>
+        <dt class="col-sm-2">
+           Requested By:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RequestedBy)
+        </dd>
+        <dt class="col-sm-2">
+          Date Requested:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Requested_Date)
+        </dd>
+        <dt class="col-sm-2">
+           Contractor Assigned:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contractor_Assigned)
+        </dd>
+        <dt class="col-sm-2">
+           Contractor's Comments:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contractor_Comments)
+        </dd>
+        <dt class="col-sm-2">
+           Contractor's Start Date:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contractor_Start_Date)
+        </dd>
+        <dt class="col-sm-2">
+          Contractor's Completion Date:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contractor_Completion_Date)
+        </dd>
+        <dt class="col-sm-2">
+          Service Status:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Service_Status)
+        </dd>
+        <dt class="col-sm-2">
+          Image folder Name:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FolderUrl)
+        </dd>
+        <dt class="col-sm-2">
+           Inspected By:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Inspected_By)
+        </dd>
+        <dt class="col-sm-2">
+           Date Inspected:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Date_Inspected)
+        </dd>
+        <dt class="col-sm-2">
+           Inspection Comments:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Inspection_Comments)
+        </dd>
+    </dl>
+    <div id="dp"></div>
+    <section class="gallery-block cards-gallery">
+        <div class="container">
+            <div class="heading">
+                <h2>Image Gallery</h2>
+            </div>
+            <div class="row" id="gallery">
+            </div>
+        </div>
+    </section>
+
+
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="WorkServiceID" />
+        <input type="submit" value="Delete" class="btn btn-danger" @ViewBag.Protect /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
+
+<script type="text/javascript">
+             $(document).ready(function ()
+             {
+                    var firebaseConfig = {
+                    apiKey: "AIzaSyAjymOpaYO_3qaAs-2NUD1h3litYcmczXk",
+                    authDomain: "testarmin.firebaseapp.com",
+                    databaseURL: "https://testarmin.firebaseio.com",
+                    storageBucket: "testarmin.appspot.com",
+
+                };
+                firebase.initializeApp(firebaseConfig);
+
+              // Get a reference to the storage service, which is used to create references in your storage bucket
+                 var eve = @Html.Raw(Json.Serialize(Model.FolderUrl));
+                 var storageRef = firebase.storage().ref(eve + "/");
+
+
+                 storageRef.listAll().then(function (result) {
+                     let count = 0;
+                     result.items.forEach(function (imageRef, i) {
+                         count++;
+                         imageRef.getDownloadURL().then(function (url) {
+                             let urlimg = url;
+                             let name = urlimg.substr(urlimg.indexOf('%2F') + 3, (urlimg.indexOf('?')) - (urlimg.indexOf('%2F') + 3));
+                             var extension = name.substr((name.lastIndexOf('.') + 1));
+                             if (extension == 'txt') {
+                                 $("#gallery").append("<div class='col-md-3 col-lg-2 col-sm-4' id='" + i + "'><div class='card border-0 transform-on-hover'><a href='" + url + "' id='" + i + "' class='lightbox'><img src='/images/text.png' id='" + i + 'pic' + "' alt='...' max-width='250' class='card-img-top'></a><div class='card-body'>Initial Storage Folder Doc</div></div></div>")
+
+                             }
+                             else if (extension == 'pdf') {
+                                 $("#gallery").append("<div class='col-md-3 col-lg-2 col-sm-4' id='" + i + "'><div class='card border-0 transform-on-hover'><a href='" + url + "' id='" + i + "' class='lightbox'><img src='/images/pdfimg.png' id='" + i + 'pic' + "' alt='...' max-width='250' class='card-img-top'></a><div class='card-body'><button class='btn btn-danger' onclick='deleteImg(" + i + ")' id='" + i + 'btn' + "'>Delete Pdf</button></div></div></div>")
+                             }
+                             else {
+                                 $("#gallery").append("<div class='col-md-3 col-lg-2 col-sm-4' id='" + i + "'><div class='card border-0 transform-on-hover'><a href='" + url + "' id='" + i + "' class='lightbox'><img src='" + url + "' id='" + i + 'pic' + "' alt='...' max-width='250' class='card-img-top'></a><div class='card-body'><button class='btn btn-danger' onclick='deleteImg(" + i + ")' id='" + i + 'btn' + "'>Delete Image</button></div></div></div>")
+                             }
+                         }).catch(function (error) {alert(error);});
+                     });
+                 }).catch(function (error) { alert(error);});
+             });
+
+    function deleteImg(clicked_id) {
+        $(document).ready(function () {
+       
+
+
+            if (confirm('Are you sure you want to delete this image?')) {
+
+                var idimg = clicked_id + 'pic';
+                var eve = @Html.Raw(Json.Serialize(Model.FolderUrl));
+                var urlimg = document.getElementById(idimg).getAttribute("src");
+                let name = urlimg.substr(urlimg.indexOf('%2F') + 3, (urlimg.indexOf('?')) - (urlimg.indexOf('%2F') + 3));
+                name = name.replace('%20', ' ');
+                name = name.replace('%2C', ',');
+                var storageRef = firebase.storage().ref()
+                storageRef.child(eve + "/" + name).delete().then(function() {
+                           $('#dp').empty();
+                           $('#dp').append("<b>Image deleted from "+ eve +" folder!</b>");
+                            window.location.reload();
+                        }).catch(function(error) {
+                           $('#dp').empty();
+                           $('#dp').append( "<b>Error occured trying to delete image!</b>");
+                        });
+
+
+
+
+            }
+
+        }
+
+        
+    )};
+
+</script>
+  

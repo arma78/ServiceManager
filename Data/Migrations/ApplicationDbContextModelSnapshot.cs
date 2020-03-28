@@ -203,6 +203,11 @@ namespace ServiceManager.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Professional_Skill")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(40)")
+                        .HasMaxLength(40);
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -212,6 +217,9 @@ namespace ServiceManager.Data.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<int?>("WorkOrderWorkServiceID")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -223,7 +231,136 @@ namespace ServiceManager.Data.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("WorkOrderWorkServiceID");
+
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("ServiceManager.Models.Profession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Skill")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Profession");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Skill = "Weilder"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Skill = "Brick Layer"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Skill = "Electrician"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Skill = "Hardwood Floor Installer"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Skill = "Tile Installer"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Skill = "Plumber"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Skill = "Drywall Installer"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Skill = "Insulation Installer"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Skill = "Kitchen Cabinet Installer"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Skill = "Framer"
+                        });
+                });
+
+            modelBuilder.Entity("ServiceManager.Models.WorkOrder", b =>
+                {
+                    b.Property<int>("WorkServiceID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Contractor_Assigned")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Contractor_Comments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Contractor_Completion_Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Contractor_Start_Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Date_Inspected")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Floor")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FolderUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Inspected_By")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Inspection_Comments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Property_Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RequestedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Requested_Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Service_Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Unit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WorkServiceName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WorkService_Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("WorkServiceID");
+
+                    b.ToTable("WorkOrder");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -275,6 +412,13 @@ namespace ServiceManager.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ServiceManager.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("ServiceManager.Models.WorkOrder", null)
+                        .WithMany("AppUser")
+                        .HasForeignKey("WorkOrderWorkServiceID");
                 });
 #pragma warning restore 612, 618
         }

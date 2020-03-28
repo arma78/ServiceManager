@@ -1,0 +1,52 @@
+﻿@model IEnumerable<ServiceManager.Models.Profession>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<hr />
+
+<p>
+    @if (User.Identity.IsAuthenticated)
+    {
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create"><span class="fas fa-file" aria-hidden="true"> Create New</span></a>
+        }
+    }
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Skill)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Skill)
+                </td>
+                <td>
+                    <div>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Id"><span class="fas fa-edit" aria-hidden="true"> | </span></a>
+                                <a asp-action="Details" asp-route-id="@item.Id"><span class="fas fa-info" aria-hidden="true"> | </span></a>
+                                <a asp-action="Delete" asp-route-id="@item.Id"><span class="fas fa-eraser" aria-hidden="true"></span></a>
+                                }
+                            }
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

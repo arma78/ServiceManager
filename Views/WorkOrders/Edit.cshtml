@@ -1,0 +1,257 @@
+﻿@model ServiceManager.Models.WorkOrder
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<hr />
+
+<h4>Edit this Service Request</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="WorkServiceID" />
+            <div class="form-group">
+                <label asp-for="Property_Address" class="control-label">Property Address</label>
+                <input asp-for="Property_Address" class="form-control" id="Property_Address" />
+                <span asp-validation-for="Property_Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Floor" class="control-label">Floor #:</label>
+                <input asp-for="Floor" class="form-control" id="Floor" />
+                <span asp-validation-for="Floor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Unit" class="control-label">Unit #</label>
+                <input asp-for="Unit" class="form-control" id="Unit" />
+                <span asp-validation-for="Unit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WorkServiceName" class="control-label">Work Service Name:</label>
+                <input asp-for="WorkServiceName" class="form-control" id="WorkServiceName" />
+                <span asp-validation-for="WorkServiceName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WorkService_Description" class="control-label">Work Service Description:</label>
+                <textarea id="WorkService_Description" text-wrap="normal" type="text" placeholder="Please add your decription here" asp-for="WorkService_Description" class="form-control"></textarea>
+                <span asp-validation-for="WorkService_Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RequestedBy" class="control-label">Requested By:</label>
+                <input asp-for="RequestedBy" id="RequestedBy" class="form-control" readonly="readonly" />
+                <span asp-validation-for="RequestedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Requested_Date" class="control-label">Date Requested:</label>
+                <input asp-for="Requested_Date" id="Requested_Date" class="form-control" readonly="readonly" />
+                <span asp-validation-for="Requested_Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="StatusCont">Assigned Status: </label>
+                <select id="StatusCont" onchange="SelectedValueStatus()">
+                    <option value="Intitialized">Intitialized</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Canceled">Canceled</option>
+                    <option value="Completed">Completed</option>
+                </select>
+                <label asp-for="Service_Status" class="control-label">Service Status:</label>
+                <input asp-for="Service_Status" id="Service_Status" readonly="readonly" class="form-control" />
+                <span asp-validation-for="Service_Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FolderUrl" class="control-label">Image Folder Name:</label>
+                <input asp-for="FolderUrl" id="FolderUrl" readonly="readonly" class="form-control" />
+                <span asp-validation-for="FolderUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contractor_Assigned" class="control-label">Contractor Assigned:</label>
+                <input asp-for="Contractor_Assigned" id="Contractor_Assigned" readonly="readonly" class="form-control" />
+                <span asp-validation-for="Contractor_Assigned" class="text-danger"></span>
+            </div>
+            <div class="myInspection">
+                Contractor Section:
+                <div class="form-group">
+                    <label asp-for="Contractor_Start_Date" class="control-label">Contractor's Start Date:</label>
+                    <input asp-for="Contractor_Start_Date" id="Contractor_Start_Date" class="form-control" />
+                    <span asp-validation-for="Contractor_Start_Date" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Contractor_Completion_Date" class="control-label">Contractor's Completion Date:</label>
+                    <input asp-for="Contractor_Completion_Date" id="Contractor_Completion_Date" class="form-control" />
+                    <span asp-validation-for="Contractor_Completion_Date" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Contractor_Comments" class="control-label">Contractor's Comments:</label>
+                    <textarea  text-wrap="normal" id="ContrComments" type="text" placeholder="Please add your decription here" asp-for="Contractor_Comments" class="form-control"></textarea>
+                    <span asp-validation-for="Contractor_Comments" class="text-danger"></span>
+                </div>
+             </div>
+            <hr />
+            <div class="myInspection">
+                Inspection Section:
+                <div class="form-group">
+                    <label asp-for="Inspected_By" class="control-label">Inspected By:</label>
+                    <input asp-for="Inspected_By" id="Inspected_By" class="form-control" />
+                    <span asp-validation-for="Inspected_By" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Date_Inspected" class="control-label">Date Inspected:</label>
+                    <input asp-for="Date_Inspected" id="Date_Inspected" class="form-control" />
+                    <span asp-validation-for="Date_Inspected" class="text-danger"></span>
+
+                </div>
+                <div class="form-group">
+                    <label asp-for="Inspection_Comments" class="control-label">Inspection Comments:</label>
+                    <textarea text-wrap="normal" id="Inspection_Comments" type="text" placeholder="Please add your decription here" asp-for="Inspection_Comments"  class="form-control"></textarea>
+                    <span asp-validation-for="Inspection_Comments" class="text-danger"></span>
+                </div>
+
+            </div>
+            <div>@ViewBag.p</div>
+            <div>@ViewBag.error</div>
+            <div>
+                <label class="control-label" for="file">Select Image or Blueprint To Upload: </label>
+                <input class="btn btn-primary" type="file" id="file" name="selectFile"  accept="image/gif,image/pdf, image/jpg, image/jpeg, image/jpg, image/png" onchange="DisplayFilesToUpload()" />
+            </div>
+            <p id="FilesToUpload"></p>
+            <p>
+                <img src="" id="profile-img-tag" width="200" />
+            </p>
+            <div class="form-group">
+                <p id="FilesToUpload"></p>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" id="saveEdit" class="btn btn-primary" />
+                <div id="progress" class="progress"><div id="bar" class="bar"></div><div id="label" class="label">0%</div></div>
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script type="text/javascript">
+
+
+    $(window).on('load', function () {
+
+        ContractorFunc(function(output){
+           
+            if (output !== "contrue")
+            {
+                document.getElementById('ContrComments').setAttribute('readonly', true);
+                document.getElementById('Contractor_Start_Date').setAttribute('readonly', true);
+                document.getElementById('Contractor_Completion_Date').setAttribute('readonly', true); 
+            }
+        })
+
+        InitiatorFunc(function(output){
+           
+            if (output !== "initrue")
+            {
+                     document.getElementById('Property_Address').setAttribute('readonly', true);
+                     document.getElementById('Floor').setAttribute('readonly', true);
+                     document.getElementById('Unit').setAttribute('readonly', true);
+                     document.getElementById('WorkServiceName').setAttribute('readonly', true);
+                     document.getElementById('WorkService_Description').setAttribute('readonly', true);
+                     document.getElementById('Inspected_By').setAttribute('readonly', true);
+                     document.getElementById('Date_Inspected').setAttribute('readonly', true);
+                     document.getElementById('Inspection_Comments').setAttribute('readonly', true);
+                     document.getElementById('Service_Status').setAttribute('readonly', true);
+            }
+        })
+
+
+    });
+
+
+
+
+         
+   
+
+    function readURL(input)
+    {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#profile-img-tag').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+
+    function DisplayFilesToUpload()
+    {
+        var element = document.getElementById("file");
+        var html = "";
+        html = "<b>Upload to gallery: </b>";
+        document.getElementById("FilesToUpload").innerHTML = html;
+        readURL(element);
+    }
+
+
+
+    function InitiatorFunc(handleInitiator)
+    {
+
+        var initiator = document.getElementById('RequestedBy').value;
+
+         $.ajax({
+            type: "GET",
+            url: '@Url.Action("InspectionValidation")',
+            data: {formInitiator:initiator},
+            dataType: "json",
+            cache: false,
+            contentType: "application/json; charset=utf-8",
+             success: function (data)
+              {
+                  handleInitiator(data);
+              },
+              error: function ()
+              {
+                console.log('something went wrong - debug it!' + data);
+              }
+        });
+
+    }
+
+
+    function ContractorFunc(handleContractor)
+    {
+        var contractor = document.getElementById('Contractor_Assigned').value;
+         $.ajax({
+            type: "GET",
+            url: '@Url.Action("ContractorValidation")',
+            data: {formContractor:contractor},
+            dataType: "json",
+            cache: false,
+            contentType: "application/json; charset=utf-8",
+             success: function (data)
+              {
+                 handleContractor(data);
+              },
+             error: function () {
+                 console.log('something went wrong - debug it!' + data);
+             }
+         });
+    }
+
+    function SelectedValueStatus()
+    {
+        //Selected text of dropdownlist
+        var seTextC = $("#StatusCont option:selected").val();
+        document.getElementById("Service_Status").value = seTextC;
+    }
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,149 @@
+﻿
+
+#myCarousel {
+    border: 2px;
+    border-color: saddlebrown;
+    border-style:solid;
+}
+
+.myInspection {
+    border: 1px;
+    border-color: saddlebrown;
+    border-style: solid;
+    background-color:#eed592;
+    margin:3px;
+    outline:3px;
+}
+
+
+
+.carousel-control-prev {
+    background-color: #cfad70;
+
+}
+.carousel-control-next {
+    background-color: #cfad70;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+ color:white;
+
+}
+
+
+    .dp {
+    color: blue;
+    font-size:medium;
+    align-content:center;
+}
+
+.card-footerC .a:link {
+    color: white;
+}
+.card-footerC {
+    border: 1px;
+    border-color: saddlebrown;
+    border-style: solid;
+    padding: 0.75rem 1.25rem;
+    background-color: #007bff;
+    color: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-footerC:last-child {
+    border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+}
+
+
+.carousel-control-prev:focus, .carousel-control-prev:hover {
+    color: #EED592;
+}
+.carousel-control-next:focus, .carousel-control-next:hover {
+    color: #EED592;
+} 
+
+
+.carousel-inner img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+@media screen and (min-width: 1300px) {
+    .carousel-inner img {
+        width: 955px;
+        height: 700px !important;
+    }
+}
+@media screen and (min-width: 768px) {
+    .carousel-inner img {
+        width: 600px;
+        height: 450px !important;
+    }
+}
+@media screen and (min-width: 412px) {
+    .carousel-inner img {
+        width: 300px;
+        height: 200px !important;
+    }
+}
+
+
+
+
+
+
+
+
+.zui-table {
+    border: solid 1px #DDEEEE;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    font: normal 13px Arial, sans-serif;
+}
+
+    .zui-table thead th {
+        background-color: #DDEFEF;
+        border: solid 1px #DDEEEE;
+        color: #336B6B;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .zui-table tbody td {
+        border: solid 1px #DDEEEE;
+        color: #333;
+        padding: 10px;
+    }
+
+.zui-table-rounded {
+    border: none;
+}
+
+    .zui-table-rounded thead th {
+        background-color: #CFAD70;
+        border: none;
+        color: #333;
+    }
+
+        .zui-table-rounded thead th:first-child {
+            border-radius: 10px 0 0 0;
+        }
+
+        .zui-table-rounded thead th:last-child {
+            border-radius: 0 10px 0 0;
+        }
+
+    .zui-table-rounded tbody td {
+        border: none;
+        border-top: solid 1px #957030;
+        background-color: #EED592;
+    }
+
+    .zui-table-rounded tbody tr:last-child td:first-child {
+        border-radius: 0 0 0 10px;
+    }
+
+    .zui-table-rounded tbody tr:last-child td:last-child {
+        border-radius: 0 0 10px 0;
+    }

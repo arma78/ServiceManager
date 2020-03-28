@@ -10,8 +10,8 @@ using ServiceManager.Data;
 namespace ServiceManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200108185739_ServiceManager")]
-    partial class ServiceManager
+    [Migration("20200111162725_SeedSkills")]
+    partial class SeedSkills
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -226,6 +226,73 @@ namespace ServiceManager.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("ServiceManager.Models.Profession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Skill")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Profession");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Skill = "Weilder"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Skill = "Brick Layer"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Skill = "Electrician"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Skill = "Hardwood Floor Installer"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Skill = "Tile Installer"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Skill = "Plumber"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Skill = "Drywall Installer"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Skill = "Insulation Installer"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Skill = "Kitchen Cabinet Installer"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Skill = "Framer"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

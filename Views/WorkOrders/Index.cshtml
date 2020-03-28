@@ -1,0 +1,126 @@
+﻿@model PaginatedList<ServiceManager.Models.WorkOrder>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<hr />
+
+<p>
+    @if (User.Identity.IsAuthenticated)
+    {
+    @if (User.IsInRole("Admin"))
+        {
+    <a asp-action="Create"><span class="fas fa-file" aria-hidden="true"> Create New</span></a>
+        }
+    }
+</p>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Search text: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <button type="submit" class="btn btn-info">
+                <span class="fas fa-search" aria-hidden="true"></span> Search
+            </button> |
+            <a asp-action="Index"><span class="fas fa-power-off" aria-hidden="true"> Reset to Full List</span></a>
+</p>
+    </div>
+</form>
+<br />
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-info @prevDisabled">
+    Prev <span class="fas fa-arrow-alt-circle-left" aria-hidden="true"></span>
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-info @nextDisabled">
+    <span class="fas fa-arrow-alt-circle-right" aria-hidden="true"></span> Next
+</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Work Order Name</a>
+            </th>
+            <th>
+                Property Address
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Date Requested</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["ContSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Contractor Assigned</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["StatusSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Status</a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkServiceName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Property_Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Requested_Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contractor_Assigned)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Service_Status)
+            </td>
+            <td>
+            <td>
+                <div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                            <a asp-action="Edit" asp-route-id="@item.WorkServiceID"><span class="fas fa-edit" aria-hidden="true"> | </span></a>
+                            <a asp-action="Details" asp-route-id="@item.WorkServiceID"><span class="fas fa-info" aria-hidden="true"> | </span></a>
+                            <a asp-action="Delete" asp-route-id="@item.WorkServiceID"><span class="fas fa-eraser" aria-hidden="true"></span></a>
+                    }
+                </div>
+                
+</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-info @prevDisabled">
+    Prev <span class="fas fa-arrow-alt-circle-left" aria-hidden="true"></span>
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-info @nextDisabled">
+    <span class="fas fa-arrow-alt-circle-right" aria-hidden="true"></span> Next
+</a>
+
+
+
+

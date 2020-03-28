@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceManager.Models;
+using ServiceManager.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ServiceManager.Areas.Identity.Pages.Account.Manage
 {
@@ -14,13 +16,15 @@ namespace ServiceManager.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-
+        private readonly ApplicationDbContext _context;
         public IndexModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         public string Username { get; set; }
@@ -39,11 +43,20 @@ namespace ServiceManager.Areas.Identity.Pages.Account.Manage
 
             [Required, DataType(DataType.Text), Display(Name = "Last Name")]
             public string LastName { get; set; }
-
-
-            [Phone]
-            [Display(Name = "Phone number")]
+            [Required(ErrorMessage = "Phone Number Required!")]
+            [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$",
+                   ErrorMessage = "Entered phone format is not valid.")]
+            [DataType(DataType.Text), Display(Name = "Phone Number")]
+           
             public string PhoneNumber { get; set; }
+
+
+            [Required, DataType(DataType.Text), Display(Name = "Professional Skill")]
+            public string Professional_Skill { get; set; }
+
+
+
+
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -57,12 +70,16 @@ namespace ServiceManager.Areas.Identity.Pages.Account.Manage
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                Professional_Skill = user.Professional_Skill,
                 PhoneNumber = phoneNumber
             };
+
+            
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -75,6 +92,7 @@ namespace ServiceManager.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -98,8 +116,11 @@ namespace ServiceManager.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+
             if (Input.FirstName != user.FirstName) user.FirstName = Input.FirstName;
             if (Input.LastName != user.LastName) user.LastName = Input.LastName;
+            if (Input.PhoneNumber != user.PhoneNumber) user.LastName = Input.PhoneNumber;
+            if (Input.Professional_Skill != user.Professional_Skill) user.Professional_Skill = Input.Professional_Skill;
             await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);

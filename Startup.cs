@@ -13,11 +13,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ServiceManager.Models;
+using ReflectionIT.Mvc.Paging;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ServiceManager
 {
     public class Startup
     {
+        public static int Progress { get; set; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,12 +33,13 @@ namespace ServiceManager
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-           // services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                services.AddIdentity<ApplicationUser, AppRole>()
-                .AddDefaultTokenProviders()
-                .AddDefaultUI()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                Configuration.GetConnectionString("DefaultConnection")));
+            services.Configure<StorageAccountOptions>(Configuration.GetSection("AccessKey"));
+            services.Configure<TwilioSMS>(Configuration.GetSection("TwilioSMS"));
+            services.AddIdentity<ApplicationUser, AppRole>()
+            .AddDefaultTokenProviders()
+            .AddDefaultUI()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -69,6 +73,9 @@ namespace ServiceManager
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
         }
+
     }
+
 }

@@ -1,0 +1,298 @@
+﻿@model ServiceManager.Models.WorkOrder
+@{
+    ViewData["Title"] = "ContractorsAndStuff";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<hr />
+
+
+@if (User.Identity.IsAuthenticated)
+{
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="ContractorsAndStuff" method="get" enctype="multipart/form-data">
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="UserRoleEmail">Select User: </label>
+                                <select name="Contractor" id="UserRoleEmail" asp-items="@ViewBag.UserList" onchange="SelectedValue()"></select>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="RoleName">Select Role: </label>
+                                <select id="RoleName">
+                                    <option value="">Select</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Contractor">Contractor</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" id="AddRoleUser" data-toggle="modal" data-target="#basicExampleModal"><i class="fas fa-plus" aria-hidden="true"> Add User</i></button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="basicExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Confirm Adding user to the Role</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            This Action will Add user to the Role
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-primary" onclick="AddUserRole()">Confirm</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <button type="button" id="RemoveRoleUser" data-toggle="modal" data-target="#basicExampleModal1" class="btn btn-primary"><i class="fas fa-minus" aria-hidden="true"> Remove User</i></button>
+                            <div class="modal fade" id="basicExampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Confirm Removing user from the Role</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            This Action will Remove user from the Role
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-primary" onclick="RemoveUserRole()">Confirm</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="toast" data-delay="3000">
+                        <div class="toast-header">
+                            Admin Notification
+                        </div>
+                        <div class="toast-body" id="RoleAddedRemoved">
+                        </div>
+                    </div>
+                    <br />
+                    <div>
+                        <i class="fas fa-filter" aria-hidden="true">
+                            <label for="userRolesFilter">Select role to list it's members: </label>
+                        </i>
+                        <select id="userRolesFilter" onchange="FilteredRoles()">
+                            <option value="">Select Role</option>
+                            <option value="1">Admin</option>
+                            <option value="2">Manager</option>
+                            <option value="3">Contractor</option>
+                        </select>
+                    </div>
+                    <br />
+                    <table id="ContractorTable" class="zui-table zui-table-rounded">
+                        <thead>
+                            <tr>
+                                <th>
+                                    User Name:
+                                </th>
+                                <th>
+                                    User Email:
+                                </th>
+                                <th>
+                                    User Profession:
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </form>
+            </div>
+
+        </div>
+    }
+}
+
+<script type="text/javascript">
+
+
+
+    $(window).on('load', function () {
+        $('#RoleAddedRemoved').empty();
+        $('#hiddenSpinner').hide();
+    });
+
+
+
+    async function FilteredRoles() {
+        var Rolefilter = $("#userRolesFilter option:selected").val();
+        var selUser = $("#UserRoleEmail option:selected").val();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("ListUserRoles")',
+                data: { RoleIdFil: Rolefilter },
+                dataType: "json",
+                cache: false,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    var rows
+                    $('#ContractorTable tbody').empty();
+                    for (var i = 0; i < data.length; i++) {
+                        if (selUser == data[i].email.toString()) {
+                             rows = "<tr>"
+                                + "<td style='background-color:#4caf50'>" + data[i].firstName + " " + data[i].lastName + "</td>"
+                                + "<td style='background-color:#4caf50'>" + data[i].email + "</td>"
+                                + "<td style='background-color:#4caf50'>" + data[i].professional_Skill + "</td>"
+                                + "</tr>";
+                            $('#ContractorTable tbody').append(rows);
+                           
+                        }
+                        else {
+                             rows = "<tr>"
+                                + "<td>" + data[i].firstName + " " + data[i].lastName + "</td>"
+                                + "<td>" + data[i].email + "</td>"
+                                + "<td>" + data[i].professional_Skill + "</td>"
+                                + "</tr>";
+                             $('#ContractorTable tbody').append(rows);
+                        }
+                       
+                    }
+
+                },
+                error: function () {
+                    console.log('something went wrong - debug it!');
+                }
+            });
+        }
+
+    async function AddUserRole()
+    {
+        $('#AddRoleUser').append("<span class='spinner spinner-border spinner-border-sm mr-3' id='AddRoleSpinner' role='status' aria-hidden='true'></span>");
+        $('#basicExampleModal').modal('hide');
+        $('#AddRoleSpinner').show();
+        //Selected text of dropdownlist
+        var selUser = $("#UserRoleEmail option:selected").val();
+        var selRole = $("#RoleName option:selected").val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("AddUserRoles")',
+            data: { uRole: selRole, uEmail: selUser },
+            dataType: "json",
+            cache: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $('#RoleAddedRemoved').empty();
+
+                if (data == "Succcess") {
+                    $('#RoleAddedRemoved').append("<b>User " + selUser + " has been added to the " + selRole + " Role !!! </b>");
+                    $('.toast').toast('show');
+                }
+                else {
+                    $('#RoleAddedRemoved').append("<b>Failed to add  " + selUser + " user to the " + selRole + " Role. <br \> Or " + data + " </b>");
+                    $('.toast').toast('show');
+
+                }
+                $('#AddRoleSpinner').hide();
+            },
+            error: function () {
+                console.log('something went wrong - debug it!' + data);
+            }
+        }).then(
+            function () {
+                switch (selRole) {
+                    case "Admin":
+                        document.getElementById("userRolesFilter").selectedIndex = 1;
+                        break;
+                    case "Manager":
+                        document.getElementById("userRolesFilter").selectedIndex = 2;
+                        break;
+                    case "Contractor":
+                        document.getElementById("userRolesFilter").selectedIndex = 3;
+                        break;
+                    default:
+                        break;
+                }
+                FilteredRoles();
+            }
+        );
+
+     }
+     async function RemoveUserRole()
+     { 
+         $('#RemoveRoleUser').append("<span class='spinner spinner-border spinner-border-sm mr-3' id='RemoveRoleSpinner' role='status' aria-hidden='true'></span>");
+         $('#basicExampleModal1').modal('hide');
+         $('#RemoveRoleSpinner').show();
+        
+         //Selected text of dropdownlist
+         var selUser = $("#UserRoleEmail option:selected").val();
+         var selRole = $("#RoleName option:selected").val();
+          $.ajax({
+            type: "GET",
+            url: '@Url.Action("RemoveUserRoles")',
+            data: {uRole:selRole,uEmail:selUser },
+            dataType: "json",
+            cache: false,
+            contentType: "application/json; charset=utf-8",
+              success: function (data)
+              {
+                 
+
+                  $('#RoleAddedRemoved').empty();
+                  if (data == "Succcess")
+                    {
+                      $('#RoleAddedRemoved').append("<b>User " + selUser + " has been removed from the " + selRole + " Role!! </b>");
+                      $('.toast').toast('show');
+                    }
+                    else
+                    {
+                      $('#RoleAddedRemoved').append("<b>Failed to Remove user " + selUser + " from the " + selRole + " Role  </b>");
+                      $('.toast').toast('show');
+                     
+                  }
+                   $('#RemoveRoleSpinner').hide();
+                
+              },
+              error: function ()
+              {
+                console.log('something went wrong - debug it!' + data);
+              }
+              
+          }).then(
+            function () {
+                switch (selRole) {
+                    case "Admin":
+                        document.getElementById("userRolesFilter").selectedIndex = 1;
+                        break;
+                    case "Manager":
+                        document.getElementById("userRolesFilter").selectedIndex = 2;
+                        break;
+                    case "Contractor":
+                        document.getElementById("userRolesFilter").selectedIndex = 3;
+                        break;
+                    default:
+                        break;
+                  }
+                  FilteredRoles();
+            }
+        );
+
+        
+    }
+</script>
