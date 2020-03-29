@@ -68,24 +68,67 @@
     margin-left: auto;
     margin-right: auto;
 }
-@media screen and (min-width: 1300px) {
+
+@media only screen and (min-width: 960px) {
     .carousel-inner img {
         width: 955px;
         height: 700px !important;
     }
+    /* styles for browsers larger than 960px; */
 }
-@media screen and (min-width: 768px) {
+
+@media only screen and (min-width: 1440px) {
+    .carousel-inner img {
+        width: 1200px;
+        height: 900px !important;
+    }
+    /* styles for browsers larger than 1440px; */
+}
+
+@media only screen and (min-width: 2000px) {
+    .carousel-inner img {
+        width: 1700px;
+        height: 1200px !important;
+    }
+    /* for sumo sized (mac) screens */
+}
+
+@media only screen and (max-device-width: 480px) {
+    .carousel-inner img {
+        width: 420px;
+        height: 300px !important;
+    }
+    /* styles for mobile browsers smaller than 480px; (iPhone) */
+}
+
+@media only screen and (device-width: 768px) {
+    .carousel-inner img {
+        width: 700px;
+        height: 550px !important;
+    }
+    /* default iPad screens */
+}
+/* different techniques for iPad screening */
+@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {
     .carousel-inner img {
         width: 600px;
-        height: 450px !important;
+        height: 800px !important;
     }
+    /* For portrait layouts only */
 }
-@media screen and (min-width: 412px) {
+
+@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape) {
     .carousel-inner img {
-        width: 300px;
-        height: 200px !important;
+        width: 800px;
+        height: 600px !important;
     }
+    /* For landscape layouts only */
 }
+
+
+
+
+
 
 
 
