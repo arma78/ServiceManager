@@ -131,16 +131,39 @@
 </div>
 
 <script type="text/javascript">
-             $(document).ready(function ()
-             {
-                    var firebaseConfig = {
-                    apiKey: "AIzaSyAjymOpaYO_3qaAs-2NUD1h3litYcmczXk",
-                    authDomain: "testarmin.firebaseapp.com",
-                    databaseURL: "https://testarmin.firebaseio.com",
-                    storageBucket: "testarmin.appspot.com",
+             let apik = "";
+    let authd = "";
+    let storageB = "";
 
-                };
-                firebase.initializeApp(firebaseConfig);
+    function InitiatorFirebase(handleInitiator) {
+        $.ajax({
+            type: "GET",
+            url: "/WorkOrders/GetConfigurationValue",
+            dataType: "json",
+            cache: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                handleInitiator(data);
+            },
+            error: function () {
+                console.log('something went wrong - debug it!');
+            }
+        });
+    }
+
+
+    $(document).ready(function () {
+
+        InitiatorFirebase(function (output) {
+            apik = output[0];
+            authd = output[1];
+            storageB = output[2];
+            var firebaseConfig = {
+                    apiKey: apik,
+                    authDomain: authd,
+                    storageBucket: storageB,
+                    };
+            firebase.initializeApp(firebaseConfig);
 
               // Get a reference to the storage service, which is used to create references in your storage bucket
                  var eve = @Html.Raw(Json.Serialize(Model.FolderUrl));
@@ -168,7 +191,8 @@
                          }).catch(function (error) {alert(error);});
                      });
                  }).catch(function (error) { alert(error);});
-             });
+        });
+    });
 
     function deleteImg(clicked_id) {
         $(document).ready(function () {

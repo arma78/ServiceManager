@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using ServiceManager.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace ServiceManager.Controllers
 {
@@ -18,11 +19,16 @@ namespace ServiceManager.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IConfiguration configuration)
+        private readonly StorageAccountOptions _storageAccountOptions;
+        public HomeController(ILogger<HomeController> logger, 
+            ApplicationDbContext context,
+            IConfiguration configuration,
+            IOptionsSnapshot<StorageAccountOptions> storageOptions)
         {
             _logger = logger;
             _context = context;
             _configuration = configuration;
+            _storageAccountOptions = storageOptions.Value;
         }
 
         public async Task<IActionResult> Index()
@@ -37,6 +43,17 @@ namespace ServiceManager.Controllers
                 StrageFolder = new SelectList(await genreQuery.Distinct().ToListAsync()),
             };
             return View(FirebaseStorageFolders);
+        }
+
+        [HttpGet]
+        public ActionResult GetConfigurationValue()
+        {
+            string[] parameterValue = { _storageAccountOptions.apiKey,
+                                        _storageAccountOptions.authDomain,
+                                        _storageAccountOptions.bucket
+                                       };
+
+            return Json(parameterValue.ToList());
         }
 
         [HttpGet]

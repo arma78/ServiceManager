@@ -57,6 +57,9 @@ namespace ServiceManager.Controllers
         }
 
 
+      
+
+
         // GET: WorkOrders
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
@@ -123,6 +126,18 @@ namespace ServiceManager.Controllers
 
             int pageSize = 5;
             return View(await PaginatedList<WorkOrder>.CreateAsync(WorkOrder.AsNoTracking(), pageNumber ?? 1, pageSize));
+        }
+
+
+        [HttpGet]
+        public ActionResult  GetConfigurationValue()
+        {
+            string[] parameterValue = { _storageAccountOptions.apiKey,
+                                        _storageAccountOptions.authDomain,
+                                        _storageAccountOptions.bucket
+                                       };
+
+            return Json(parameterValue.ToList());
         }
 
         [Authorize(Roles = "Admin")]

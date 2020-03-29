@@ -108,17 +108,40 @@
 
 
 <script type="text/javascript">
+ let apik = "";
+    let authd = "";
+    let storageB = "";
+
+    function InitiatorFirebase(handleInitiator) {
+        $.ajax({
+            type: "GET",
+            url: "/WorkOrders/GetConfigurationValue",
+            dataType: "json",
+            cache: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                handleInitiator(data);
+            },
+            error: function () {
+                console.log('something went wrong - debug it!');
+            }
+        });
+    }
+
 
     $(document).ready(function () {
 
-
-        var firebaseConfig = {
-            apiKey: "AIzaSyAjymOpaYO_3qaAs-2NUD1h3litYcmczXk",
-            authDomain: "testarmin.firebaseapp.com",
-            storageBucket: "testarmin.appspot.com",
-        };
-        firebase.initializeApp(firebaseConfig);
-        console.log(apiKey);
+        InitiatorFirebase(function (output) {
+            apik = output[0];
+            authd = output[1];
+            storageB = output[2];
+            var firebaseConfig = {
+                    apiKey: apik,
+                    authDomain: authd,
+                    storageBucket: storageB,
+                    };
+            firebase.initializeApp(firebaseConfig);
+        });
     });
 
     async function checkFolderName() {

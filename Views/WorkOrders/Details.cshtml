@@ -12,31 +12,31 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-           Property Address:
+            Property Address:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Property_Address)
         </dd>
         <dt class="col-sm-2">
-           Floor #:
+            Floor #:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Floor)
         </dd>
         <dt class="col-sm-2">
-           Unit #:
+            Unit #:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Unit)
         </dd>
         <dt class="col-sm-2">
-           Work Service Name:
+            Work Service Name:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.WorkServiceName)
         </dd>
         <dt class="col-sm-2">
-          Work Service Description:
+            Work Service Description:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.WorkService_Description)
@@ -48,19 +48,19 @@
             @Html.DisplayFor(model => model.RequestedBy)
         </dd>
         <dt class="col-sm-2">
-           Date Requested:
+            Date Requested:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Requested_Date)
         </dd>
         <dt class="col-sm-2">
-           Contractor Assigned:
+            Contractor Assigned:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Contractor_Assigned)
         </dd>
         <dt class="col-sm-2">
-           Contractor Comments:
+            Contractor Comments:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Contractor_Comments)
@@ -78,31 +78,31 @@
             @Html.DisplayFor(model => model.Contractor_Completion_Date)
         </dd>
         <dt class="col-sm-2">
-           Service Status:
+            Service Status:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Service_Status)
         </dd>
         <dt class="col-sm-2">
-          Storage Folder Name:
+            Storage Folder Name:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FolderUrl)
         </dd>
         <dt class="col-sm-2">
-          Inspected By:
+            Inspected By:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Inspected_By)
         </dd>
         <dt class="col-sm-2">
-          Date Inspected:
+            Date Inspected:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Date_Inspected)
         </dd>
         <dt class="col-sm-2">
-          Inspection Comments:
+            Inspection Comments:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Inspection_Comments)
@@ -127,15 +127,44 @@
 </div>
 
 <script type="text/javascript">
-             $(document).ready(function ()
-                {
-                    var firebaseConfig = {
-                    apiKey: "AIzaSyAjymOpaYO_3qaAs-2NUD1h3litYcmczXk",
-                    authDomain: "testarmin.firebaseapp.com",
-                    databaseURL: "https://testarmin.firebaseio.com",
-                    storageBucket: "testarmin.appspot.com",
-                };
+    let apik = "";
+    let authd = "";
+    let storageB = "";
+
+    function InitiatorFirebase(handleInitiator) {
+        $.ajax({
+            type: "GET",
+            url: "/WorkOrders/GetConfigurationValue",
+            dataType: "json",
+            cache: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                handleInitiator(data);
+            },
+            error: function () {
+                console.log('something went wrong - debug it!');
+            }
+        });
+    }
+
+
+    $(document).ready(function () {
+
+        InitiatorFirebase(function (output) {
+            apik = output[0];
+            authd = output[1];
+            storageB = output[2];
+            var firebaseConfig = {
+                    apiKey: apik,
+                    authDomain: authd,
+                    storageBucket: storageB,
+                    };
             firebase.initializeApp(firebaseConfig);
+        
+
+
+
+
 
         // Get a reference to the storage service, which is used to create references in your storage bucket
         var eve = @Html.Raw(Json.Serialize(Model.FolderUrl));
@@ -167,6 +196,7 @@
             });
         }).
             catch(function (error) {
+            });
         });
     });
 </script>
