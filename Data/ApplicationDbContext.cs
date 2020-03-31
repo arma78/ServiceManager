@@ -17,14 +17,14 @@ namespace ServiceManager.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<MetaData>();
             builder.Entity<ApplicationUser>().Ignore(e => e.FullName);
+           
 
 
-
-         
-            builder.Entity<Profession>()
+        builder.Entity<Profession>()
                 .HasData(
-                    new Profession { Id = 1, Skill = "Weilder"},
+                    new Profession { Id = 1, Skill = "Welder"},
                     new Profession { Id = 2, Skill = "Brick Layer"},
                     new Profession { Id = 3, Skill = "Electrician" },
                     new Profession { Id = 4, Skill = "Hardwood Floor Installer" },
@@ -47,5 +47,7 @@ namespace ServiceManager.Data
         public DbSet<ServiceManager.Models.Profession> Profession { get; set; }
 
         public DbSet<ServiceManager.Models.WorkOrder> WorkOrder { get; set; }
+
+        public DbSet<ServiceManager.Models.MetaData> MetaData { get; set; }
     }
 }

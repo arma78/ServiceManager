@@ -50,7 +50,6 @@
                 <span asp-validation-for="Requested_Date" class="text-danger"></span>
             </div>
             Assign Contractor: <select name="Contractor" id="ContractorID" asp-items="@ViewBag.UserList" onchange="SelectedValue()"></select>
-
             <div class="form-group">
                 <label asp-for="Contractor_Assigned" class="control-label">Contractor Assigned:</label>
                 <input readonly="readonly" asp-for="Contractor_Assigned" id="Contractortxt" class="form-control" />
@@ -218,8 +217,9 @@
     }
     function SelectedValue() {
         //Selected text of dropdownlist
-        var seText = $("#ContractorID option:selected").val();
-        document.getElementById("Contractortxt").value = seText;
+        var seVal = $("#ContractorID option:selected").val();
+        document.getElementById("Contractortxt").value = seVal;      
+      
     }
 
 </script>

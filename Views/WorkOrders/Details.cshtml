@@ -110,6 +110,17 @@
     </dl>
 </div>
 
+<table id="ContractorTable" class="zui-table zui-table-rounded">
+    <thead>
+        <tr>
+            <th>Last Modified by:</th>
+            <th>Date Modified:</th>
+            <th>Service Status Modified By:</th>
+            <th>Service Status Modified Date:</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
 
 <section class="gallery-block cards-gallery">
     <div class="container">
@@ -127,6 +138,12 @@
 </div>
 
 <script type="text/javascript">
+
+     $(window).on('load', function () {
+         MetaDataColl();
+    });
+
+
     let apik = "";
     let authd = "";
     let storageB = "";
@@ -160,7 +177,7 @@
                     storageBucket: storageB,
                     };
             firebase.initializeApp(firebaseConfig);
-        
+
 
 
 
@@ -199,4 +216,57 @@
             });
         });
     });
+    function MetaDataColl() {
+        var id = @Html.Raw(Json.Serialize(Model.WorkServiceID));
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("getMetaData")',
+            data: { id: id },
+            dataType: "json",
+            cache: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $('#ContractorTable tbody').empty();
+                var md;
+                var msd;
+                var mdby;
+                var msdby;
+                
+                for (var i = 0; i < data.length; i++) {
+
+                    if (data[i].modifiedDate == null) {
+                       
+                        md = "Not modified yet!"
+                        mdby = "Not modified yet!"
+                    }
+                    else {
+                        md = new Date(data[i].modifiedDate).toLocaleString();
+                        mdby = data[i].modifiedBy;
+                    }
+                     if (data[i].modifiedStatusDate == null) {
+                       
+                         msd = "Not modified yet!"
+                         msdby = "Not modified yet!"
+                    }
+                    else {
+                         msd = new Date(data[i].modifiedStatusDate).toLocaleString();
+                         msdby = data[i].statusModifiedBy;
+                    }
+                   
+                    var rows = "<tr>"
+                        + "<td>" + mdby + "</td>"
+                        + "<td>" + md + "</td>"
+                        + "<td>" + msdby + "</td>"
+                        + "<td>" + msd + "</td>"
+                        + "</tr>";
+                    $('#ContractorTable tbody').append(rows);
+                }
+
+
+            },
+            error: function () {
+                console.log('something went wrong - debug it!');
+            }
+        });
+    }
 </script>

@@ -62,7 +62,7 @@ namespace ServiceManager.Areas.Identity.Pages.Account
             [Required, DataType(DataType.Text), Display(Name = "Last Name")]
             public string LastName { get; set; }
             [Required(ErrorMessage = "Phone Number Required!")]
-            [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$",
+            [RegularExpression(@"^\(?([0-9]{2})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{3})$",
                    ErrorMessage = "Entered phone format is not valid.")]
             [DataType(DataType.Text), Display(Name = "Phone Number")]
             public string PhoneNumber { get; set; }

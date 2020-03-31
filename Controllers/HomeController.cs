@@ -75,7 +75,7 @@ namespace ServiceManager.Controllers
             return Json(genreQuery2);
         }
 
-        public IActionResult Privacy()
+        public IActionResult About()
         {
             return View();
         }

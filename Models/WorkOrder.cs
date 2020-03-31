@@ -22,16 +22,19 @@ namespace ServiceManager.Models
         public string Contractor_Assigned { get; set; }
         public string Contractor_Comments { get; set; }
         [DataType(DataType.DateTime)]
-        public DateTime Contractor_Start_Date { get; set; }
+        public DateTime? Contractor_Start_Date { get; set; }
         [DataType(DataType.DateTime)]
-        public DateTime Contractor_Completion_Date { get; set; }
+        public DateTime? Contractor_Completion_Date { get; set; }
         public string Service_Status { get; set; }
         public string FolderUrl { get; set; }
         public string Inspected_By { get; set; }
         [DataType(DataType.DateTime)]
-        public DateTime Date_Inspected { get; set; }
+        public DateTime? Date_Inspected { get; set; }
         public string Inspection_Comments { get; set; }
 
         public List<ApplicationUser> AppUser { get; set; }
+
+        public ICollection<MetaData> Metadata { get; set; }
     }
 }
+

@@ -9,5 +9,8 @@ namespace ServiceManager.Models
     {
         public string accountSid { get; set; }
         public string authToken { get; set; }
+        public string statePerfix { get; set; }
+        public string TwilioNumber { get; set; }
+        public string Active { get; set; }
     }
 }

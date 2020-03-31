@@ -25,11 +25,11 @@ using Twilio.Rest.Api.V2010.Account;
 namespace ServiceManager.Controllers
 {
 
-   
+
     public class WorkOrdersController : Controller
     {
 
-       
+
 
         private readonly ApplicationDbContext _context;
         public IList<SelectListItem> UserList { get; set; }
@@ -38,7 +38,7 @@ namespace ServiceManager.Controllers
         private readonly RoleManager<AppRole> _roleManager;
         private readonly StorageAccountOptions _storageAccountOptions;
         private readonly TwilioSMS _twilioSMS;
-        
+
         private Task<ApplicationUser> GetCurrentUser() => _userManager.GetUserAsync(HttpContext.User);
         public WorkOrdersController(ApplicationDbContext context,
                 UserManager<ApplicationUser> userManager,
@@ -57,7 +57,7 @@ namespace ServiceManager.Controllers
         }
 
 
-      
+
 
 
         // GET: WorkOrders
@@ -65,7 +65,7 @@ namespace ServiceManager.Controllers
         {
 
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = sortOrder == "name_asc" ? "name_desc" : "name_asc";            
+            ViewData["NameSortParm"] = sortOrder == "name_asc" ? "name_desc" : "name_asc";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             ViewData["ContSortParm"] = sortOrder == "cont_assigned" ? "cont_assigned_desc" : "cont_assigned";
             ViewData["StatusSortParm"] = sortOrder == "status_asc" ? "status_desc" : "status_asc";
@@ -83,7 +83,7 @@ namespace ServiceManager.Controllers
             ViewData["CurrentFilter"] = searchString;
 
             var WorkOrder = from s in _context.WorkOrder
-                           select s;
+                            select s;
 
 
             if (!String.IsNullOrEmpty(searchString))
@@ -129,8 +129,11 @@ namespace ServiceManager.Controllers
         }
 
 
+
+
+
         [HttpGet]
-        public ActionResult  GetConfigurationValue()
+        public ActionResult GetConfigurationValue()
         {
             string[] parameterValue = { _storageAccountOptions.apiKey,
                                         _storageAccountOptions.authDomain,
@@ -140,9 +143,9 @@ namespace ServiceManager.Controllers
             return Json(parameterValue.ToList());
         }
 
-        [Authorize(Roles = "Admin")]
+        //  [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> AddUserRoles(string uRole,string uEmail)
+        public async Task<IActionResult> AddUserRoles(string uRole, string uEmail)
         {
             string[] roleNames = { "Admin", "Manager", "Contractor" };
             IdentityResult roleResult;
@@ -163,28 +166,31 @@ namespace ServiceManager.Controllers
                 bool isAdmin = await _userManager.IsInRoleAsync(user, uRole);
                 await _userManager.AddToRoleAsync(user, uRole);
                 message = "Succcess";
-                try
+                if (_twilioSMS.Active == "true")
                 {
-                    var userPhoneNumber = _context.Users.Where(s => s.Email == uEmail)
-                        .Select(s => new
-                        {
-                            s.PhoneNumber
-                        })
-                        .FirstOrDefault().PhoneNumber.ToString();
-                    userPhoneNumber = userPhoneNumber.Replace(" ", "").Replace("(", "").Replace(")", "").Replace("-", "");
-                    Console.WriteLine("User Number " + userPhoneNumber);
-                    TwilioClient.Init(_twilioSMS.accountSid, _twilioSMS.authToken);
-                    var to = new PhoneNumber("+387" + userPhoneNumber);
-                    var SMSmessage = MessageResource.Create(
-                        to,
-                        from: new PhoneNumber("+12057517343"),   
-                        body: $"Hello {user} !! you have been granted permission to Service Manager {uRole} role!!");
+                    try
+                    {
+                        var userPhoneNumber = _context.Users.Where(s => s.Email == uEmail)
+                            .Select(s => new
+                            {
+                                s.PhoneNumber
+                            })
+                            .FirstOrDefault().PhoneNumber.ToString();
+                        userPhoneNumber = userPhoneNumber.Replace(" ", "").Replace("(", "").Replace(")", "").Replace("-", "");
+                        Console.WriteLine("User Number " + userPhoneNumber);
+                        TwilioClient.Init(_twilioSMS.accountSid, _twilioSMS.authToken);
+                        var to = new PhoneNumber(_twilioSMS.statePerfix + userPhoneNumber);
+                        var SMSmessage = MessageResource.Create(
+                            to,
+                            from: new PhoneNumber(_twilioSMS.TwilioNumber),
+                            body: $"Hello {user} !! you have been granted permission to Service Manager {uRole} role!!");
                         pn = to.ToString();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($" Registration Failure : {ex.Message} ");
-                    message = ("Error occured, SMS Message has not been sent to user number" + pn);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($" Registration Failure : {ex.Message} ");
+                        message = ("Error occured, SMS Message has not been sent to user number" + pn);
+                    }
                 }
             }
             catch (Exception)
@@ -193,7 +199,7 @@ namespace ServiceManager.Controllers
                 throw;
             }
             return Json(message);
-            
+
         }
 
         [Authorize(Roles = "Admin")]
@@ -216,9 +222,34 @@ namespace ServiceManager.Controllers
             return Json(message);
 
         }
+
         [HttpGet]
-        [Authorize(Roles = "Admin,Manager")]
-        public JsonResult  ListUserRoles(int RoleIdFil)
+        [Authorize(Roles = "Admin,Manager,Contractor")]
+        public JsonResult getMetaData(int id)
+        {
+            var metadataQuery = (from m in _context.MetaData
+                               join e in _context.WorkOrder
+                               on m.WorkServiceID equals e.WorkServiceID
+                               where m.WorkServiceID == id
+                               select new MetaData()
+                               {
+                                   CreatedBy = m.CreatedBy,
+                                   CreatedDate = m.CreatedDate,
+                                   ModifiedBy = m.ModifiedBy,
+                                   ModifiedDate = m.ModifiedDate,
+                                   StatusModifiedBy = m.StatusModifiedBy,
+                                   ModifiedStatusDate = m.ModifiedStatusDate,
+                               }).Distinct().ToList();
+            return Json(metadataQuery);
+        }
+
+
+
+
+
+        [HttpGet]
+        //   [Authorize(Roles = "Admin,Manager")]
+        public JsonResult ListUserRoles(int RoleIdFil)
         {
             var genreQuery2 = (from m in _context.UserRoles
                                join e in _context.Users
@@ -244,7 +275,7 @@ namespace ServiceManager.Controllers
         public async Task<IActionResult> InspectionValidation(string formInitiator)
         {
             ApplicationUser appuser = await GetCurrentUser();
-            string  userInit;
+            string userInit;
             var useremail = appuser.Email.ToString();
             if (formInitiator == useremail)
             {
@@ -295,7 +326,7 @@ namespace ServiceManager.Controllers
 
 
 
-
+        [Authorize(Roles = "Admin,Manager,Contractor")]
         // GET: WorkOrders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -304,15 +335,37 @@ namespace ServiceManager.Controllers
                 return NotFound();
             }
 
+           
+
+
+
             var workOrder = await _context.WorkOrder
                 .FirstOrDefaultAsync(m => m.WorkServiceID == id);
+
+            ApplicationUser appuser = await GetCurrentUser();
+            var useremail = appuser.Email.ToString();
+
+            bool isAdmin = await _userManager.IsInRoleAsync(appuser, "Admin");
+            bool isManager = await _userManager.IsInRoleAsync(appuser, "Manager");
+
+            if ((workOrder.Contractor_Assigned != useremail) && (isAdmin == false) && (isManager == false))
+            {
+                return new ForbidResult();
+            }
+            else
+            {
+                return View(workOrder);
+            }
+
+
+
             if (workOrder == null)
             {
                 return NotFound();
             }
-            
-              return View(workOrder);
-            
+
+            return View(workOrder);
+
         }
 
 
@@ -329,7 +382,7 @@ namespace ServiceManager.Controllers
                                 new SelectListItem
                                 {
                                     Value = a.Email,
-                                    Text = a.Email
+                                    Text = a.FullName
                                 }).ToList();
             ViewBag.UserList = UserList;
             return View();
@@ -344,8 +397,8 @@ namespace ServiceManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("WorkServiceID,Property_Address,Floor,Unit,WorkServiceName,WorkService_Description,RequestedBy,Requested_Date,Contractor_Assigned,Contractor_Comments,Contractor_Start_Date,Contractor_Completion_Date,Service_Status,FolderUrl,Inspected_By,Date_Inspected,Inspection_Comments")] WorkOrder workOrder, IFormCollection form)
         {
-            
-          
+
+            string uemail = Request.Form["Contractortxt"];
             string eventType = Request.Form["FolderUrl"];
             string Radiobox1 = Request.Form["ImageChoice1"];
             string Radiobox2 = Request.Form["ImageChoice2"];
@@ -397,7 +450,8 @@ namespace ServiceManager.Controllers
                 {
                     ApplicationUser appuser = await GetCurrentUser();
                     var useremail = appuser.Email.ToString();
-                    string fileLoc = @"c:\tmp\Test.txt";
+                    //string fileLoc = @"c:\tmp\Test.txt";
+                    string fileLoc = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images", "Test.txt");
                     FileStream file1 = new FileStream(fileLoc, FileMode.Open, FileAccess.ReadWrite);
                     var data = "Document Initiazlized by:" + useremail + ", For the folder: " + eventType;
                     byte[] bytes = Encoding.UTF8.GetBytes(data);
@@ -432,8 +486,46 @@ namespace ServiceManager.Controllers
             {
                 _context.Add(workOrder);
                  await _context.SaveChangesAsync();
-                 //return RedirectToAction(nameof(Index));
-                 return RedirectToAction("Details", "WorkOrders", new { id = workOrder.WorkServiceID });
+                ApplicationUser appuser = await GetCurrentUser();
+                var userFullName = appuser.FullName;
+                MetaData mdt = new MetaData();
+                mdt.CreatedBy = userFullName;
+                mdt.CreatedDate = DateTime.Now;
+                mdt.ModifiedDate = null;
+                mdt.ModifiedStatusDate = null;
+                mdt.WorkServiceID = workOrder.WorkServiceID;
+                _context.Add(mdt);
+                _context.SaveChanges();
+
+                if (_twilioSMS.Active == "true")
+                {
+                    try
+                    {
+                        var userPhoneNumber = _context.Users.Where(s => s.Email == uemail)
+                            .Select(s => new
+                            {
+                                s.PhoneNumber
+                            })
+                            .FirstOrDefault().PhoneNumber.ToString();
+                        userPhoneNumber = userPhoneNumber.Replace(" ", "").Replace("(", "").Replace(")", "").Replace("-", "");
+                        TwilioClient.Init(_twilioSMS.accountSid, _twilioSMS.authToken);
+                        var to = new PhoneNumber(_twilioSMS.statePerfix + userPhoneNumber);
+                        var SMSmessage = MessageResource.Create(
+                            to,
+                            from: new PhoneNumber(_twilioSMS.TwilioNumber),
+                            body: $"Hello {uemail} !!!, You have been assigned new Work Order Service Request");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($" Registration Failure : {ex.Message} ");
+
+                    }
+                }
+
+
+
+
+                return RedirectToAction("Details", "WorkOrders", new { id = workOrder.WorkServiceID });
             }
 
             return View(workOrder);
@@ -478,6 +570,8 @@ namespace ServiceManager.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("WorkServiceID,Property_Address,Floor,Unit,WorkServiceName,WorkService_Description,RequestedBy,Requested_Date,Contractor_Assigned,Contractor_Comments,Contractor_Start_Date,Contractor_Completion_Date,Service_Status,FolderUrl,Inspected_By,Date_Inspected,Inspection_Comments")] WorkOrder workOrder, IFormCollection form)
         {
             string eventType = Request.Form["FolderUrl"];
+            string WOStatus = Request.Form["Service_Status"];
+            string uEmail = Request.Form["RequestedBy"];
             int idNo = Convert.ToInt32(Request.Form["WorkServiceID"]);
             var file = form.Files.FirstOrDefault();
             if (id != workOrder.WorkServiceID)
@@ -524,6 +618,58 @@ namespace ServiceManager.Controllers
 
                 try
                 {
+                    var updatedStatus = _context.WorkOrder.Where(s => s.WorkServiceID == id)
+                       .Select(s => new
+                       {
+                           s.Service_Status
+                       })
+                       .FirstOrDefault().Service_Status.ToString();
+                    ApplicationUser appuser = await GetCurrentUser();
+                    var userFullName = appuser.FullName;
+                    if (updatedStatus != WOStatus)
+                    {
+                        var MetaUpdate = _context.MetaData.Single(p => p.WorkServiceID == id);
+                        MetaUpdate.ModifiedBy = userFullName;
+                        MetaUpdate.ModifiedDate = DateTime.Now;
+                        MetaUpdate.StatusModifiedBy = userFullName;
+                        MetaUpdate.ModifiedStatusDate = DateTime.Now; 
+                        _context.Update(MetaUpdate);
+
+                        if (_twilioSMS.Active == "true")
+                        {
+                            try
+                            {
+                                var userPhoneNumber = _context.Users.Where(s => s.Email == uEmail)
+                                    .Select(s => new
+                                    {
+                                        s.PhoneNumber
+                                    })
+                                    .FirstOrDefault().PhoneNumber.ToString();
+                                userPhoneNumber = userPhoneNumber.Replace(" ", "").Replace("(", "").Replace(")", "").Replace("-", "");
+                                TwilioClient.Init(_twilioSMS.accountSid, _twilioSMS.authToken);
+                                var to = new PhoneNumber(_twilioSMS.statePerfix + userPhoneNumber);
+                                var SMSmessage = MessageResource.Create(
+                                    to,
+                                    from: new PhoneNumber(_twilioSMS.TwilioNumber),
+                                    body: $"Contractor {uEmail}, has changed Service Status to from {updatedStatus} to {WOStatus}.");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($" Registration Failure : {ex.Message} ");
+                             
+                            }
+                        }
+
+
+                    }
+                    else
+                    {
+                        var MetaUpdate = _context.MetaData.Single(p => p.WorkServiceID == id);
+                        MetaUpdate.ModifiedBy = userFullName;
+                        MetaUpdate.ModifiedDate = DateTime.Now;
+                        _context.Update(MetaUpdate);
+                    }
+                  
                    
                     _context.Update(workOrder);
                     await _context.SaveChangesAsync();
@@ -595,6 +741,8 @@ namespace ServiceManager.Controllers
             {
                 return new ForbidResult();
             }
+            var MetaUpdate = _context.MetaData.Single(p => p.WorkServiceID == id);
+            _context.MetaData.Remove(MetaUpdate);
             _context.WorkOrder.Remove(workOrder);
 
             await _context.SaveChangesAsync();
