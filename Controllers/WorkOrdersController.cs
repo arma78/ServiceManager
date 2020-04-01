@@ -634,7 +634,7 @@ namespace ServiceManager.Controllers
                         MetaUpdate.StatusModifiedBy = userFullName;
                         MetaUpdate.ModifiedStatusDate = DateTime.Now; 
                         _context.Update(MetaUpdate);
-
+                        // Send SMS message to Manager when Contractor change Service Request Status
                         if (_twilioSMS.Active == "true")
                         {
                             try

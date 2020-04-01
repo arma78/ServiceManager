@@ -11,16 +11,19 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-                    Collapsible Group 1
+                    SMS Notification
                 </a>
             </h4>
         </div>
         <div id="collapse1" class="panel-collapse collapse in">
             <div class="panel-body">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat.
+                <ul>
+                    <li>Case 1: User is notified when Admin adds user to the Manager's or Contractor's Role)</li>
+                    <li>Case 2: User is notified when Admin removes user from the Manager's or Contractor's Role)</li>
+                    <li>Case 3: Admin is notified when user is completed registration)</li>
+                    <li>Case 4: Assigned Contractor is notified when the Form initiator (Manager) creates a new Request</li>
+                    <li>Case 5: Form initiator (Manager) is notified when contractor change status from 'Initialized' to 'In Progress' or 'Complete'.)</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -28,16 +31,38 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-                    Collapsible Group 2
+                    Authorization
                 </a>
             </h4>
         </div>
         <div id="collapse2" class="panel-collapse collapse">
             <div class="panel-body">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat.
+                <table class="zui-table zui-table-rounded">
+                    <thead>
+                        <tr>
+                            <th>Page Access</th>
+                            <th>Admin</th>
+                            <th>Manager</th>
+                            <th>Contractor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Home Page</td><td>R</td><td>R</td><td>X</td></tr>
+                        <tr><td>Service Request Index</td><td>R</td><td>R</td><td>R</td></tr>
+                        <tr><td>Service Request Edit</td><td>R</td><td>R-E</td><td>R-E-D-C</td></tr>
+                        <tr><td>Service Request Create</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
+                        <tr><td>Service Request Delete</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
+                        <tr><td>Service Request Details</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
+                        <tr><td>Service Skills Index</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
+                        <tr><td>Service Skills Create</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
+                        <tr><td>Service Skills Delete</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
+                        <tr><td>Service Skills Details</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
+                        <tr><td>Role Settings Index</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
+                        <tr><td>Role Settings Add Role</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
+                        <tr><td>Role Settings Remove Role</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
+                    </tbody>
+                    Legend: R-read E-edit D-delete C-create X-no access 
+                </table>
             </div>
         </div>
     </div>
@@ -45,7 +70,7 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
-                    Collapsible Group 3
+                    Uploading Images and Documents
                 </a>
             </h4>
         </div>
