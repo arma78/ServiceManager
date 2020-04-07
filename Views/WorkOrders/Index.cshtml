@@ -11,7 +11,7 @@
 <p>
     @if (User.Identity.IsAuthenticated)
     {
-    @if (User.IsInRole("Admin"))
+    @if (User.IsInRole("Manager"))
         {
     <a asp-action="Create"><span class="fas fa-file" aria-hidden="true"> Create New</span></a>
         }
@@ -91,11 +91,11 @@
             <td>
             <td>
                 <div>
+                        <a asp-action="Details" asp-route-id="@item.WorkServiceID"><span class="fas fa-info" aria-hidden="true"> | </span></a>
                     @if (User.Identity.IsAuthenticated)
                     {
-                            <a asp-action="Edit" asp-route-id="@item.WorkServiceID"><span class="fas fa-edit" aria-hidden="true"> | </span></a>
-                            <a asp-action="Details" asp-route-id="@item.WorkServiceID"><span class="fas fa-info" aria-hidden="true"> | </span></a>
-                            <a asp-action="Delete" asp-route-id="@item.WorkServiceID"><span class="fas fa-eraser" aria-hidden="true"></span></a>
+                        <a asp-action="Edit" asp-route-id="@item.WorkServiceID"><span class="fas fa-edit" aria-hidden="true"> | </span></a>
+                        <a asp-action="Delete" asp-route-id="@item.WorkServiceID"><span class="fas fa-eraser" aria-hidden="true"></span></a>
                     }
                 </div>
                 

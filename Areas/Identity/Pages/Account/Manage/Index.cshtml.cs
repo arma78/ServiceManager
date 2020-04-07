@@ -9,24 +9,34 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceManager.Models;
 using ServiceManager.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Twilio.Exceptions;
+using Twilio.Rest.Lookups.V1;
+using Twilio;
+using Microsoft.Extensions.Options;
 
 namespace ServiceManager.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
+        private readonly TwilioSMS _twilioSMS;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _context;
         public IndexModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            CountryService countryService,
+            IOptionsSnapshot<TwilioSMS> twilioSMS)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
+            _twilioSMS = twilioSMS.Value; 
+            AvailableCountries = countryService.GetCountries();
         }
 
+        public List<SelectListItem> AvailableCountries { get; }
         public string Username { get; set; }
 
         [TempData]
@@ -44,8 +54,8 @@ namespace ServiceManager.Areas.Identity.Pages.Account.Manage
             [Required, DataType(DataType.Text), Display(Name = "Last Name")]
             public string LastName { get; set; }
             [Required(ErrorMessage = "Phone Number Required!")]
-            [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$",
-                   ErrorMessage = "Entered phone format is not valid.")]
+          //  [RegularExpression(@"^\(?([0-9]{4})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$",
+           //        ErrorMessage = "Entered phone format is not valid.")]
             [DataType(DataType.Text), Display(Name = "Phone Number")]
            
             public string PhoneNumber { get; set; }
@@ -54,7 +64,8 @@ namespace ServiceManager.Areas.Identity.Pages.Account.Manage
             [Required, DataType(DataType.Text), Display(Name = "Professional Skill")]
             public string Professional_Skill { get; set; }
 
-
+            [Display(Name = "Phone number country")]
+            public string PhoneNumberCountryCode { get; set; }
 
 
         }
@@ -108,18 +119,43 @@ namespace ServiceManager.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
+                try
                 {
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
+                    TwilioClient.Init(_twilioSMS.accountSid, _twilioSMS.authToken);
+                    var numberDetails = await PhoneNumberResource.FetchAsync(
+                        pathPhoneNumber: new Twilio.Types.PhoneNumber(Input.PhoneNumber),
+                        countryCode: Input.PhoneNumberCountryCode,
+                        type: new List<string> { "carrier" });
+
+                    // only allow user to set phone number if capable of receiving SMS
+                    if (numberDetails?.Carrier != null
+                        && numberDetails.Carrier.TryGetValue("type", out var phoneNumberType)
+                        && phoneNumberType == "landline")
+                    {
+                        ModelState.AddModelError($"{nameof(Input)}.{nameof(Input.PhoneNumber)}",
+                            $"The number you entered does not appear to be capable of receiving SMS ({phoneNumberType}). Please enter a different value and try again");
+                        return Page();
+                    }
+
+                    var numberToSave = numberDetails.PhoneNumber.ToString();
+                    var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, numberToSave);
+                    if (!setPhoneResult.Succeeded)
+                    {
+                        var userId = await _userManager.GetUserIdAsync(user);
+                        throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
+                    }
+                }
+                catch (ApiException ex)
+                {
+                    ModelState.AddModelError($"{nameof(Input)}.{nameof(Input.PhoneNumber)}",
+                        $"The number you entered was not valid (Twilio code {ex.Code}), please check it and try again");
+                    return Page();
                 }
             }
 
 
             if (Input.FirstName != user.FirstName) user.FirstName = Input.FirstName;
             if (Input.LastName != user.LastName) user.LastName = Input.LastName;
-            if (Input.PhoneNumber != user.PhoneNumber) user.LastName = Input.PhoneNumber;
             if (Input.Professional_Skill != user.Professional_Skill) user.Professional_Skill = Input.Professional_Skill;
             await _userManager.UpdateAsync(user);
 

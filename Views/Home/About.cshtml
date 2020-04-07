@@ -11,7 +11,7 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-                    SMS Notification
+                    SMS-Phone Notifications:
                 </a>
             </h4>
         </div>
@@ -19,10 +19,10 @@
             <div class="panel-body">
                 <ul>
                     <li>Case 1: User is notified when Admin adds user to the Manager's or Contractor's Role)</li>
-                    <li>Case 2: User is notified when Admin removes user from the Manager's or Contractor's Role)</li>
+                    <li>Case 2: User is notified when Admin removes user from the Manager's or Contractor's Role</li>
                     <li>Case 3: Admin is notified when user is completed registration)</li>
                     <li>Case 4: Assigned Contractor is notified when the Form initiator (Manager) creates a new Request</li>
-                    <li>Case 5: Form initiator (Manager) is notified when contractor change status from 'Initialized' to 'In Progress' or 'Complete'.)</li>
+                    <li>Case 5: Form initiator (Manager) is notified when contractor change status from 'Initialized' to 'In Progress' or 'Complete'.</li>
                 </ul>
             </div>
         </div>
@@ -31,7 +31,7 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-                    Authorization
+                    Authorization Access:
                 </a>
             </h4>
         </div>
@@ -49,19 +49,19 @@
                     <tbody>
                         <tr><td>Home Page</td><td>R</td><td>R</td><td>X</td></tr>
                         <tr><td>Service Request Index</td><td>R</td><td>R</td><td>R</td></tr>
-                        <tr><td>Service Request Edit</td><td>R</td><td>R-E</td><td>R-E-D-C</td></tr>
-                        <tr><td>Service Request Create</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
-                        <tr><td>Service Request Delete</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
-                        <tr><td>Service Request Details</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
-                        <tr><td>Service Skills Index</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
-                        <tr><td>Service Skills Create</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
-                        <tr><td>Service Skills Delete</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
-                        <tr><td>Service Skills Details</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
-                        <tr><td>Role Settings Index</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
-                        <tr><td>Role Settings Add Role</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
-                        <tr><td>Role Settings Remove Role</td><td>R</td><td>R-E-D-C</td><td>R-E-D-C</td></tr>
+                        <tr><td>Service Request Edit</td><td>E</td><td>X (E - Request Initiator Manager Only)</td><td>X (E - Assigned Contractor Only)</td></tr>
+                        <tr><td>Service Request Create</td><td>C</td><td>C</td><td>X</td></tr>
+                        <tr><td>Service Request Delete</td><td>D</td><td>X (D - Request Initiator Manager Only)</td><td>X</td></tr>
+                        <tr><td>Service Request Details</td><td>R</td><td>R</td><td>R</td></tr>
+                        <tr><td>Service Skills Index</td><td>R</td><td>R</td><td>X</td></tr>
+                        <tr><td>Service Skills Create</td><td>C</td><td>X</td><td>X</td></tr>
+                        <tr><td>Service Skills Delete</td><td>D</td><td>X</td><td>X</td></tr>
+                        <tr><td>Service Skills Details</td><td>R</td><td>R</td><td>R</td></tr>
+                        <tr><td>Role Settings Index</td><td>R</td><td>X</td><td>X</td></tr>
+                        <tr><td>Role Settings Add Role</td><td>D</td><td>X</td><td>X</td></tr>
+                        <tr><td>Role Settings Remove Role</td><td>D</td><td>X</td><td>X</td></tr>
                     </tbody>
-                    Legend: R-read E-edit D-delete C-create X-no access 
+                    Legend: R-read E-edit D-delete C-create X-no access
                 </table>
             </div>
         </div>
@@ -70,16 +70,41 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
-                    Uploading Images and Documents
+                    Extension Options:
                 </a>
             </h4>
         </div>
-        <div id="collapse3" class="panel-collapse collapse">
+        <div id="collapse3" class="panel-collapse collapse in">
             <div class="panel-body">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat.
+                <ul>
+                    <li>Language Localization</li>
+                    <li>Workflow and Email notafication customization</li>
+                    <li>Elevators on-service scheduler per contractor</li>
+                    <li>Dump/Recycle bins scheduler per contractor</li>
+                    <li>Parking spots scheduler per contractor</li>
+                    <li>Gantt Chart of the contractor's work in progress to completion</li>
+                    <li>Warehouse and Storage tools and material handeling module for the Contractors and Superintendants</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">
+                    Contact:
+                </a>
+            </h4>
+        </div>
+        <div id="collapse4" class="panel-collapse collapse">
+            <div class="panel-body">
+                <ul>
+                    <li>Armin Razic</li>
+                    <li><i class="fab fa-linkedin" aria-hidden="true"> <a href="https://www.linkedin.com/in/armin-razic-04a9521a2/"> Profile</a></i></li>
+                    <li><i class="fa fa-envelope" aria-hidden="true"> arminrazic@hotmail.com</i></li>
+                    <li><i class="fas fa-phone" aria-hidden="true"> +387 62 912 141</i></li>
+                    <li><i class="fab fa-youtube" aria-hidden="true"></i><a href="https://www.youtube.com/playlist?list=PLHZ5uQOfJ_DpmLc-pMgqSttMEP46sqJYA"> Youtube Service Manager Presentation</a></li>
+                </ul>
             </div>
         </div>
     </div>

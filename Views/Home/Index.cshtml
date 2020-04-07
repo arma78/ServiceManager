@@ -5,10 +5,7 @@
 
 <hr />
 <br />
-@if (User.Identity.IsAuthenticated)
-{
-    @if (User.IsInRole("Admin"))
-    {
+  
         <form asp-controller="WorkOrder" asp-action="Index" method="get">
             <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
                 <ol class="carousel-indicators" id="carInd">
@@ -50,8 +47,7 @@
             <span id="contId" class="fas fa-address-book" aria-hidden="true"></span>
 
         </form>
-      }
-  }
+
 
  <script type="text/javascript">
 

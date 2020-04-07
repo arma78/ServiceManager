@@ -12,7 +12,7 @@
 {
     @if (User.IsInRole("Admin"))
     {
-    }
+
         <div class="row">
             <div class="col-md-4">
                 <form asp-action="ContractorsAndStuff" method="get" enctype="multipart/form-data">
@@ -127,8 +127,8 @@
             </div>
 
         </div>
-    
-}
+        }
+    }
 
 <script type="text/javascript">
 
@@ -184,7 +184,7 @@
         }
 
     async function AddUserRole()
-    {
+    {   $('#AddRoleSpinner').empty();
         $('#AddRoleUser').append("<span class='spinner spinner-border spinner-border-sm mr-3' id='AddRoleSpinner' role='status' aria-hidden='true'></span>");
         $('#basicExampleModal').modal('hide');
         $('#AddRoleSpinner').show();
@@ -237,6 +237,7 @@
      }
      async function RemoveUserRole()
      { 
+         $('#RemoveRoleSpinner').empty();
          $('#RemoveRoleUser').append("<span class='spinner spinner-border spinner-border-sm mr-3' id='RemoveRoleSpinner' role='status' aria-hidden='true'></span>");
          $('#basicExampleModal1').modal('hide');
          $('#RemoveRoleSpinner').show();

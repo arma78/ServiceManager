@@ -132,8 +132,10 @@
 
 <script type="text/javascript">
              let apik = "";
-    let authd = "";
-    let storageB = "";
+             let authd = "";
+             let storageB = "";
+             let authemail = "";
+             let authpassword = "";
 
     function InitiatorFirebase(handleInitiator) {
         $.ajax({
@@ -158,10 +160,14 @@
             apik = output[0];
             authd = output[1];
             storageB = output[2];
+            authemail = output[3]; 
+            authpassword = output[4]; 
             var firebaseConfig = {
                     apiKey: apik,
                     authDomain: authd,
                     storageBucket: storageB,
+                    AuthEmail: authemail,
+                    AuthPassword: authpassword
                     };
             firebase.initializeApp(firebaseConfig);
 
@@ -208,6 +214,14 @@
                 name = name.replace('%20', ' ');
                 name = name.replace('%2C', ',');
                 var storageRef = firebase.storage().ref()
+                
+                firebase.auth().signInWithEmailAndPassword(authemail,authpassword).catch(function(error) {
+                  // Handle Errors here.
+                  var errorCode = error.code;
+                  var errorMessage = error.message;
+                    console.log(errorCode + " - " + errorMessage);
+                });
+
                 storageRef.child(eve + "/" + name).delete().then(function() {
                            $('#dp').empty();
                            $('#dp').append("<b>Image deleted from "+ eve +" folder!</b>");

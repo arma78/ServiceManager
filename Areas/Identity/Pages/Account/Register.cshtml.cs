@@ -16,6 +16,12 @@ using Microsoft.Extensions.Logging;
 using ServiceManager.Models;
 using ServiceManager.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Twilio.Exceptions;
+using Twilio.Rest.Lookups.V1;
+using Twilio;
+using Microsoft.Extensions.Options;
+using Twilio.Types;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace ServiceManager.Areas.Identity.Pages.Account
 {
@@ -27,20 +33,23 @@ namespace ServiceManager.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-
+        private readonly TwilioSMS _twilioSMS;
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            ApplicationDbContext context
-            )
+            ApplicationDbContext context,
+            CountryService countryService,
+            IOptionsSnapshot<TwilioSMS> twilioSMS)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _twilioSMS = twilioSMS.Value;
+            AvailableCountries = countryService.GetCountries();
         }
 
         
@@ -50,6 +59,7 @@ namespace ServiceManager.Areas.Identity.Pages.Account
 
         public string ReturnUrl { get; set; }
 
+        public List<SelectListItem> AvailableCountries { get; }
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
         public IList<SelectListItem> Options { get; set; }
         public class InputModel
@@ -62,14 +72,16 @@ namespace ServiceManager.Areas.Identity.Pages.Account
             [Required, DataType(DataType.Text), Display(Name = "Last Name")]
             public string LastName { get; set; }
             [Required(ErrorMessage = "Phone Number Required!")]
-            [RegularExpression(@"^\(?([0-9]{2})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{3})$",
-                   ErrorMessage = "Entered phone format is not valid.")]
+            //[RegularExpression(@"^\(?([0-9]{4})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$",
+             //      ErrorMessage = "Entered phone format is not valid.")]
             [DataType(DataType.Text), Display(Name = "Phone Number")]
             public string PhoneNumber { get; set; }
 
             [Required, DataType(DataType.Text), Display(Name = "Professional Skill")]
             public string Professional_Skill { get; set; }
-            
+
+            [Display(Name = "Phone number country")]
+            public string PhoneNumberCountryCode { get; set; }
 
             [Required]
             [EmailAddress]
@@ -91,8 +103,6 @@ namespace ServiceManager.Areas.Identity.Pages.Account
             
         }
         
-        
-
 
             public async Task OnGetAsync(string returnUrl = null)
         {
@@ -108,18 +118,48 @@ namespace ServiceManager.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, Professional_Skill = Input.Professional_Skill, PhoneNumber = Input.PhoneNumber };
+                try
+                {
+                    TwilioClient.Init(_twilioSMS.accountSid, _twilioSMS.authToken);
+                    var numberDetails = await PhoneNumberResource.FetchAsync(
+                        pathPhoneNumber: new Twilio.Types.PhoneNumber(Input.PhoneNumber),
+                        countryCode: Input.PhoneNumberCountryCode,
+                        type: new List<string> { "carrier" });
+
+                    // only allow user to set phone number if capable of receiving SMS
+                    if (numberDetails?.Carrier != null
+                        && numberDetails.Carrier.TryGetValue("type", out var phoneNumberType)
+                        && phoneNumberType == "landline")
+                    {
+                        ModelState.AddModelError($"{nameof(Input)}.{nameof(Input.PhoneNumber)}",
+                            $"The number you entered does not appear to be capable of receiving SMS ({phoneNumberType}). Please enter a different value and try again");
+                        return Page();
+                    }
+
+                   
+                }
+                catch (ApiException ex)
+                {
+                    ModelState.AddModelError($"{nameof(Input)}.{nameof(Input.PhoneNumber)}",
+                        $"The number you entered was not valid (Twilio code {ex.Code}), please check it and try again");
+                    return Page();
+                }
+
+
+
+
+
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                      var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
@@ -132,13 +172,32 @@ namespace ServiceManager.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
+
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
                     }
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
+
+                        if (_twilioSMS.Active == "true")
+                        {
+                            try
+                            {
+                                var to = new PhoneNumber("+38762912141");
+                                var SMSmessage = MessageResource.Create(
+                                    to,
+                                    from: new PhoneNumber(_twilioSMS.TwilioNumber),
+                                    body: $"New User:  {user} has been registered!");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($" Registration Failure to send sms: {ex.Message} ");
+                            }
+                        }
+
                         return LocalRedirect(returnUrl);
                     }
+
                 }
                 foreach (var error in result.Errors)
                 {

@@ -1,0 +1,923 @@
+[
+
+  {
+    "Text": "(+93) Afghanistan",
+    "Value": "AF"
+  },
+  {
+    "Text": "(+355) Albania",
+    "Value": "AL"
+  },
+  {
+    "Text": "(+213) Algeria",
+    "Value": "DZ"
+  },
+  {
+    "Text": "(+1684) American Samoa",
+    "Value": "AS"
+  },
+  {
+    "Text": "(+376) Andorra",
+    "Value": "AD"
+  },
+  {
+    "Text": "(+244) Angola",
+    "Value": "AO"
+  },
+  {
+    "Text": "(+1264) Anguilla",
+    "Value": "AI"
+  },
+  {
+    "Text": "(+672) Antarctica",
+    "Value": "AQ"
+  },
+  {
+    "Text": "(+355) Antigua and Barbuda",
+    "Value": "AG"
+  },
+  {
+    "Text": "(+54) Argentina",
+    "Value": "AR"
+  },
+  {
+    "Text": "(+374) Armenia",
+    "Value": "AM"
+  },
+  {
+    "Text": "(+297) Aruba",
+    "Value": "AW"
+  },
+  {
+    "Text": "(+61) Australia",
+    "Value": "AU"
+  },
+  {
+    "Text": "(+43) Austria",
+    "Value": "AT"
+  },
+  {
+    "Text": "(+994) Azerbaijan",
+    "Value": "AZ"
+  },
+  {
+    "Text": "(+1242) Bahamas",
+    "Value": "BS"
+  },
+  {
+    "Text": "(+973) Bahrain",
+    "Value": "BH"
+  },
+  {
+    "Text": "(+880) Bangladesh",
+    "Value": "BD"
+  },
+  {
+    "Text": "(+1246) Barbados",
+    "Value": "BB"
+  },
+  {
+    "Text": "(+375) Belarus",
+    "Value": "BY"
+  },
+  {
+    "Text": "(+32) Belgium",
+    "Value": "BE"
+  },
+  {
+    "Text": "(+501) Belize",
+    "Value": "BZ"
+  },
+  {
+    "Text": "(+229) Benin",
+    "Value": "BJ"
+  },
+  {
+    "Text": "(+1441) Bermuda",
+    "Value": "BM"
+  },
+  {
+    "Text": "(+975) Bhutan",
+    "Value": "BT"
+  },
+  {
+    "Text": "(+591) Bolivia",
+    "Value": "BO"
+  },
+  {
+    "Text": "(+387) Bosnia and Herzegovina",
+    "Value": "BA"
+  },
+  {
+    "Text": "(+267) Botswana",
+    "Value": "BW"
+  },
+  {
+    "Text": "(+55) Brazil",
+    "Value": "BR"
+  },
+  {
+    "Text": "(+246) British Indian Ocean Territory",
+    "Value": "IO"
+  },
+  {
+    "Text": "(+673) Brunei Darussalam",
+    "Value": "BN"
+  },
+  {
+    "Text": "(+359) Bulgaria",
+    "Value": "BG"
+  },
+  {
+    "Text": "(+226) Burkina Faso",
+    "Value": "BF"
+  },
+  {
+    "Text": "(+257) Burundi",
+    "Value": "BI"
+  },
+  {
+    "Text": "(+238) Cabo Verde",
+    "Value": "CV"
+  },
+  {
+    "Text": "(+855) Cambodia",
+    "Value": "KH"
+  },
+  {
+    "Text": "(+237) Cameroon",
+    "Value": "CM"
+  },
+  {
+    "Text": "(+1) Canada",
+    "Value": "CA"
+  },
+  {
+    "Text": "(+1345) Cayman Islands",
+    "Value": "KY"
+  },
+  {
+    "Text": "(+236) Central African Republic",
+    "Value": "CF"
+  },
+  {
+    "Text": "(+235) Chad",
+    "Value": "TD"
+  },
+  {
+    "Text": "(+56) Chile",
+    "Value": "CL"
+  },
+  {
+    "Text": "(+86) China",
+    "Value": "CN"
+  },
+  {
+    "Text": "(+61) Christmas Island",
+    "Value": "CX"
+  },
+  {
+    "Text": "(+61) Cocos Islands",
+    "Value": "CC"
+  },
+  {
+    "Text": "(+57) Colombia",
+    "Value": "CO"
+  },
+  {
+    "Text": "(+269) Comoros",
+    "Value": "KM"
+  },
+  {
+    "Text": "(+355) Congo",
+    "Value": "CG"
+  },
+  {
+    "Text": "(+355) Congo (Democratic Republic of the)",
+    "Value": "CD"
+  },
+  {
+    "Text": "(+682) Cook Islands",
+    "Value": "CK"
+  },
+  {
+    "Text": "(+506) Costa Rica",
+    "Value": "CR"
+  },
+  {
+    "Text": "(+355) Côte d'Ivoire",
+    "Value": "CI"
+  },
+  {
+    "Text": "(+385) Croatia",
+    "Value": "HR"
+  },
+  {
+    "Text": "(+53) Cuba",
+    "Value": "CU"
+  },
+  {
+    "Text": "(+599) Curaçao",
+    "Value": "CW"
+  },
+  {
+    "Text": "(+357) Cyprus",
+    "Value": "CY"
+  },
+  {
+    "Text": "(+420) Czechia",
+    "Value": "CZ"
+  },
+  {
+    "Text": "(+45) Denmark",
+    "Value": "DK"
+  },
+  {
+    "Text": "(+253) Djibouti",
+    "Value": "DJ"
+  },
+  {
+    "Text": "(+1767) Dominica",
+    "Value": "DM"
+  },
+  {
+    "Text": "(+1809) Dominican Republic",
+    "Value": "DO"
+  },
+  {
+    "Text": "(+593) Ecuador",
+    "Value": "EC"
+  },
+  {
+    "Text": "(+20) Egypt",
+    "Value": "EG"
+  },
+  {
+    "Text": "(+503) El Salvador",
+    "Value": "SV"
+  },
+  {
+    "Text": "(+240) Equatorial Guinea",
+    "Value": "GQ"
+  },
+  {
+    "Text": "(+291) Eritrea",
+    "Value": "ER"
+  },
+  {
+    "Text": "(+372) Estonia",
+    "Value": "EE"
+  },
+  {
+    "Text": "(+251) Ethiopia",
+    "Value": "ET"
+  },
+  {
+    "Text": "(+500) Falkland Islands (Malvinas)",
+    "Value": "FK"
+  },
+  {
+    "Text": "(+298) Faroe Islands",
+    "Value": "FO"
+  },
+  {
+    "Text": "(+579) Fiji",
+    "Value": "FJ"
+  },
+  {
+    "Text": "(+356) Finland",
+    "Value": "FI"
+  },
+  {
+    "Text": "(+33) France",
+    "Value": "FR"
+  },
+  {
+    "Text": "(+689) French Polynesia",
+    "Value": "PF"
+  },
+  {
+    "Text": "(+241) Gabon",
+    "Value": "GA"
+  },
+  {
+    "Text": "(+220) Gambia",
+    "Value": "GM"
+  },
+  {
+    "Text": "(+995) Georgia",
+    "Value": "GE"
+  },
+  {
+    "Text": "(+49) Germany",
+    "Value": "DE"
+  },
+  {
+    "Text": "(+233) Ghana",
+    "Value": "GH"
+  },
+  {
+    "Text": "(+350) Gibraltar",
+    "Value": "GI"
+  },
+  {
+    "Text": "(+30) Greece",
+    "Value": "GR"
+  },
+  {
+    "Text": "(+299) Greenland",
+    "Value": "GL"
+  },
+  {
+    "Text": "(+1473) Grenada",
+    "Value": "GD"
+  },
+  {
+    "Text": "(+1671) Guam",
+    "Value": "GU"
+  },
+  {
+    "Text": "(+502) Guatemala",
+    "Value": "GT"
+  },
+  {
+    "Text": "(+441481) Guernsey",
+    "Value": "GG"
+  },
+  {
+    "Text": "(+224) Guinea",
+    "Value": "GN"
+  },
+  {
+    "Text": "(+245) Guinea-Bissau",
+    "Value": "GW"
+  },
+  {
+    "Text": "(+355) Guyana",
+    "Value": "GY"
+  },
+  {
+    "Text": "(+509) Haiti",
+    "Value": "HT"
+  },
+    {
+    "Text": "(+504) Honduras",
+    "Value": "HN"
+  },
+  {
+    "Text": "(+852) Hong Kong",
+    "Value": "HK"
+  },
+  {
+    "Text": "(+36) Hungary",
+    "Value": "HU"
+  },
+  {
+    "Text": "(+354) Iceland",
+    "Value": "IS"
+  },
+  {
+    "Text": "(+91) India",
+    "Value": "IN"
+  },
+  {
+    "Text": "(+62) Indonesia",
+    "Value": "ID"
+  },
+  {
+    "Text": "(+98) Iran",
+    "Value": "IR"
+  },
+  {
+    "Text": "(+964) Iraq",
+    "Value": "IQ"
+  },
+  {
+    "Text": "(+353) Ireland",
+    "Value": "IE"
+  },
+  {
+    "Text": "(+441624) Isle of Man",
+    "Value": "IM"
+  },
+  {
+    "Text": "(+972) Israel",
+    "Value": "IL"
+  },
+  {
+    "Text": "(+39) Italy",
+    "Value": "IT"
+  },
+  {
+    "Text": "(+1876) Jamaica",
+    "Value": "JM"
+  },
+  {
+    "Text": "(+81) Japan",
+    "Value": "JP"
+  },
+  {
+    "Text": "(+962) Jordan",
+    "Value": "JO"
+  },
+  {
+    "Text": "(+7) Kazakhstan",
+    "Value": "KZ"
+  },
+  {
+    "Text": "(+254) Kenya",
+    "Value": "KE"
+  },
+  {
+    "Text": "(+965) Kuwait",
+    "Value": "KW"
+  },
+  {
+    "Text": "(+996) Kyrgyzstan",
+    "Value": "KG"
+  },
+  {
+    "Text": "(+371) Latvia",
+    "Value": "LV"
+  },
+  {
+    "Text": "(+961) Lebanon",
+    "Value": "LB"
+  },
+  {
+    "Text": "(+266) Lesotho",
+    "Value": "LS"
+  },
+  {
+    "Text": "(+231) Liberia",
+    "Value": "LR"
+  },
+  {
+    "Text": "(+218) Libya",
+    "Value": "LY"
+  },
+  {
+    "Text": "(+423) Liechtenstein",
+    "Value": "LI"
+  },
+  {
+    "Text": "(+370) Lithuania",
+    "Value": "LT"
+  },
+  {
+    "Text": "(+352) Luxembourg",
+    "Value": "LU"
+  },
+  {
+    "Text": "(+853) Macao",
+    "Value": "MO"
+  },
+  {
+    "Text": "(+389) Macedonia)",
+    "Value": "MK"
+  },
+  {
+    "Text": "(+261) Madagascar",
+    "Value": "MG"
+  },
+  {
+    "Text": "(+265) Malawi",
+    "Value": "MW"
+  },
+  {
+    "Text": "(+60) Malaysia",
+    "Value": "MY"
+  },
+  {
+    "Text": "(+960) Maldives",
+    "Value": "MV"
+  },
+  {
+    "Text": "(+223) Mali",
+    "Value": "ML"
+  },
+  {
+    "Text": "(+356) Malta",
+    "Value": "MT"
+  },
+  {
+    "Text": "(+692 ) Marshall Islands",
+    "Value": "MH"
+  },
+  {
+    "Text": "(+222) Mauritania",
+    "Value": "MR"
+  },
+  {
+    "Text": "(+230) Mauritius",
+    "Value": "MU"
+  },
+  {
+    "Text": "(+262) Mayotte",
+    "Value": "YT"
+  },
+  {
+    "Text": "(+52) Mexico",
+    "Value": "MX"
+  },
+  {
+    "Text": "(+691) Micronesia",
+    "Value": "FM"
+  },
+  {
+    "Text": "(+373) Moldova",
+    "Value": "MD"
+  },
+  {
+    "Text": "(+377) Monaco",
+    "Value": "MC"
+  },
+  {
+    "Text": "(+976) Mongolia",
+    "Value": "MN"
+  },
+  {
+    "Text": "(+382) Montenegro",
+    "Value": "ME"
+  },
+  {
+    "Text": "(+1664) Montserrat",
+    "Value": "MS"
+  },
+  {
+    "Text": "(+212) Morocco",
+    "Value": "MA"
+  },
+  {
+    "Text": "(+258) Mozambique",
+    "Value": "MZ"
+  },
+  {
+    "Text": "(+95) Myanmar",
+    "Value": "MM"
+  },
+  {
+    "Text": "(+264) Namibia",
+    "Value": "NA"
+  },
+  {
+    "Text": "(+674) Nauru",
+    "Value": "NR"
+  },
+  {
+    "Text": "(+977) Nepal",
+    "Value": "NP"
+  },
+  {
+    "Text": "(+31) Netherlands",
+    "Value": "NL"
+  },
+  {
+    "Text": "(+687) New Caledonia",
+    "Value": "NC"
+  },
+  {
+    "Text": "(+64) New Zealand",
+    "Value": "NZ"
+  },
+  {
+    "Text": "(+505) Nicaragua",
+    "Value": "NI"
+  },
+  {
+    "Text": "(+227) Niger",
+    "Value": "NE"
+  },
+  {
+    "Text": "(+234) Nigeria",
+    "Value": "NG"
+  },
+  {
+    "Text": "(+683) Niue",
+    "Value": "NU"
+  },
+  {
+    "Text": "(+1670) Northern Mariana Islands",
+    "Value": "MP"
+  },
+  {
+    "Text": "(+47) Norway",
+    "Value": "NO"
+  },
+  {
+    "Text": "(+968) Oman",
+    "Value": "OM"
+  },
+  {
+    "Text": "(+92) Pakistan",
+    "Value": "PK"
+  },
+  {
+    "Text": "(+680) Palau",
+    "Value": "PW"
+  },
+  {
+    "Text": "(+970) Palestine, State of",
+    "Value": "PS"
+  },
+  {
+    "Text": "(+507) Panama",
+    "Value": "PA"
+  },
+  {
+    "Text": "(+675) Papua New Guinea",
+    "Value": "PG"
+  },
+  {
+    "Text": "(+595) Paraguay",
+    "Value": "PY"
+  },
+  {
+    "Text": "(+51) Peru",
+    "Value": "PE"
+  },
+  {
+    "Text": "(+63) Philippines",
+    "Value": "PH"
+  },
+  {
+    "Text": "(+64) Pitcairn",
+    "Value": "PN"
+  },
+  {
+    "Text": "(+48) Poland",
+    "Value": "PL"
+  },
+  {
+    "Text": "(+351) Portugal",
+    "Value": "PT"
+  },
+  {
+    "Text": "(+1787) Puerto Rico",
+    "Value": "PR"
+  },
+  {
+    "Text": "(+974) Qatar",
+    "Value": "QA"
+  },
+  {
+    "Text": "(+262) Réunion",
+    "Value": "RE"
+  },
+  {
+    "Text": "(+40) Romania",
+    "Value": "RO"
+  },
+  {
+    "Text": "(+7) Russian Federation",
+    "Value": "RU"
+  },
+  {
+    "Text": "(+250) Rwanda",
+    "Value": "RW"
+  },
+  {
+    "Text": "(+590) Saint Barthélemy",
+    "Value": "BL"
+  },
+  {
+    "Text": "(+290) Saint Helena, Ascension and Tristan da Cunha",
+    "Value": "SH"
+  },
+  {
+    "Text": "(+1869) Saint Kitts and Nevis",
+    "Value": "KN"
+  },
+  {
+    "Text": "(+1758) Saint Lucia",
+    "Value": "LC"
+  },
+  {
+    "Text": "(+590) Saint Martin (French part)",
+    "Value": "MF"
+  },
+  {
+    "Text": "(+508) Saint Pierre and Miquelon",
+    "Value": "PM"
+  },
+  {
+    "Text": "(+1784) Saint Vincent and the Grenadines",
+    "Value": "VC"
+  },
+  {
+    "Text": "(+685) Samoa",
+    "Value": "WS"
+  },
+  {
+    "Text": "(+378) San Marino",
+    "Value": "SM"
+  },
+  {
+    "Text": "(+239) Sao Tome and Principe",
+    "Value": "ST"
+  },
+  {
+    "Text": "(+966) Saudi Arabia",
+    "Value": "SA"
+  },
+  {
+    "Text": "(+221) Senegal",
+    "Value": "SN"
+  },
+  {
+    "Text": "(+381) Serbia",
+    "Value": "RS"
+  },
+  {
+    "Text": "(+248) Seychelles",
+    "Value": "SC"
+  },
+  {
+    "Text": "(+232) Sierra Leone",
+    "Value": "SL"
+  },
+  {
+    "Text": "(+65) Singapore",
+    "Value": "SG"
+  },
+  {
+    "Text": "(+1721) Sint Maarten Dutch part",
+    "Value": "SX"
+  },
+  {
+    "Text": "(+421) Slovakia",
+    "Value": "SK"
+  },
+  {
+    "Text": "(+386) Slovenia",
+    "Value": "SI"
+  },
+  {
+    "Text": "(+677) Solomon Islands",
+    "Value": "SB"
+  },
+  {
+    "Text": "(+252) Somalia",
+    "Value": "SO"
+  },
+  {
+    "Text": "(+27) South Africa",
+    "Value": "ZA"
+  },
+  {
+    "Text": "(+82) South Korea",
+    "Value": "KR"
+  },
+  {
+    "Text": "(+211) South Sudan",
+    "Value": "SS"
+  },
+  {
+    "Text": "(+34) Spain",
+    "Value": "ES"
+  },
+  {
+    "Text": "(+94) Sri Lanka",
+    "Value": "LK"
+  },
+  {
+    "Text": "(+240) Sudan",
+    "Value": "SD"
+  },
+  {
+    "Text": "(+597) Suriname",
+    "Value": "SR"
+  },
+  {
+    "Text": "(+47) Svalbard and Jan Mayen",
+    "Value": "SJ"
+  },
+  {
+    "Text": "(+46) Sweden",
+    "Value": "SE"
+  },
+  {
+    "Text": "(+41) Switzerland",
+    "Value": "CH"
+  },
+  {
+    "Text": "(+963) Syrian Arab Republic",
+    "Value": "SY"
+  },
+  {
+    "Text": "(+886) Taiwan, Province of China",
+    "Value": "TW"
+  },
+  {
+    "Text": "(+992) Tajikistan",
+    "Value": "TJ"
+  },
+  {
+    "Text": "(+255) Tanzania, United Republic of",
+    "Value": "TZ"
+  },
+  {
+    "Text": "(+66) Thailand",
+    "Value": "TH"
+  },
+  {
+    "Text": "(+228) Togo",
+    "Value": "TG"
+  },
+  {
+    "Text": "(+690) Tokelau",
+    "Value": "TK"
+  },
+  {
+    "Text": "(+676) Tonga",
+    "Value": "TO"
+  },
+  {
+    "Text": "(+1868) Trinidad and Tobago",
+    "Value": "TT"
+  },
+  {
+    "Text": "(+216) Tunisia",
+    "Value": "TN"
+  },
+  {
+    "Text": "(+90) Turkey",
+    "Value": "TR"
+  },
+  {
+    "Text": "(+993) Turkmenistan",
+    "Value": "TM"
+  },
+  {
+    "Text": "(+1649) Turks and Caicos Islands",
+    "Value": "TC"
+  },
+  {
+    "Text": "(+688) Tuvalu",
+    "Value": "TV"
+  },
+  {
+    "Text": "(+256) Uganda",
+    "Value": "UG"
+  },
+  {
+    "Text": "(+380) Ukraine",
+    "Value": "UA"
+  },
+  {
+    "Text": "(+971) United Arab Emirates",
+    "Value": "AE"
+  },
+  {
+    "Text": "(+1) United States of America",
+    "Value": "US"
+  },
+  {
+    "Text": "(+44) United Kingdom of Great Britain and Northern Ireland",
+    "Value": "GB"
+  },
+    {
+    "Text": "(+598) Uruguay",
+    "Value": "UY"
+  },
+  {
+    "Text": "(+998) Uzbekistan",
+    "Value": "UZ"
+  },
+  {
+    "Text": "(+678) Vanuatu",
+    "Value": "VU"
+  },
+  {
+    "Text": "(+58) Venezuela",
+    "Value": "VE"
+  },
+  {
+    "Text": "(+84) VietNam",
+    "Value": "VN"
+  },
+  {
+    "Text": "(+1340) Virgin Islands U.S.",
+    "Value": "VI"
+  },
+  {
+    "Text": "(+681) Wallis and Futuna",
+    "Value": "WF"
+  },
+  {
+    "Text": "(+212) Western Sahara",
+    "Value": "EH"
+  },
+  {
+    "Text": "(+967) Yemen",
+    "Value": "YE"
+  },
+  {
+    "Text": "(+260) Zambia",
+    "Value": "ZM"
+  },
+  {
+    "Text": "(+263) Zimbabwe",
+    "Value": "ZW"
+  }
+]

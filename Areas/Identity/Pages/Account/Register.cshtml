@@ -34,6 +34,11 @@
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Input.PhoneNumberCountryCode"></label>
+                <select asp-for="Input.PhoneNumberCountryCode" asp-items="Model.AvailableCountries" id="cCode" onchange="SelectedCountry()" class="form-control"></select>
+                <span asp-validation-for="Input.PhoneNumberCountryCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Input.PhoneNumber"></label>
                 <input asp-for="Input.PhoneNumber" id="PhoneNumber" class="form-control" />
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
@@ -83,10 +88,12 @@
 <script src="~/jquery.mask/jquery.mask.js"></script>
 <script type="text/javascript">
     
-       $(document).ready(function($){
-            $("#PhoneNumber").mask('(00) 000-000');
-        })
-   
+    function SelectedCountry() {
+        //Selected text of dropdownlist
+        var seText = $("#cCode option:selected").text();
+        seText = seText.split('(').pop().split(')')[0]; // returns 'two'
+        document.getElementById("PhoneNumber").value = seText;
+    }
 
     function SelectedValue() {
         //Selected text of dropdownlist

@@ -23,7 +23,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="Rebex.Mail" Version="5.0.7357" />
     <PackageReference Include="ReflectionIT.Mvc.Paging" Version="4.0.0" />
-    <PackageReference Include="Twilio.AspNet.Mvc" Version="5.33.1" />
+    <PackageReference Include="Twilio" Version="5.39.0" />
+    <PackageReference Include="Twilio.AspNet.Core" Version="5.33.1" />
   </ItemGroup>
 
 

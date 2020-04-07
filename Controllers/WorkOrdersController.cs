@@ -14,13 +14,13 @@ using Firebase.Storage;
 using System.Threading;
 using System.Text;
 using System.IO;
-using System.Security;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
-using Twilio;
 using Twilio.Types;
 using Twilio.Rest.Api.V2010.Account;
+using Twilio;
+using System.Net.Mail;
+using System.Net;
 
 namespace ServiceManager.Controllers
 {
@@ -38,6 +38,8 @@ namespace ServiceManager.Controllers
         private readonly RoleManager<AppRole> _roleManager;
         private readonly StorageAccountOptions _storageAccountOptions;
         private readonly TwilioSMS _twilioSMS;
+        private readonly EmailConfiguration _EmailConfiguration;
+       
 
         private Task<ApplicationUser> GetCurrentUser() => _userManager.GetUserAsync(HttpContext.User);
         public WorkOrdersController(ApplicationDbContext context,
@@ -45,7 +47,8 @@ namespace ServiceManager.Controllers
                 SignInManager<ApplicationUser> signInManager,
                 RoleManager<AppRole> roleManager,
                 IOptionsSnapshot<StorageAccountOptions> storageOptions,
-                IOptionsSnapshot<TwilioSMS> twilioSMS
+                IOptionsSnapshot<TwilioSMS> twilioSMS,
+                IOptionsSnapshot<EmailConfiguration> EmailConfiguration
             )
         {
             _context = context;
@@ -54,6 +57,7 @@ namespace ServiceManager.Controllers
             _roleManager = roleManager;
             _storageAccountOptions = storageOptions.Value;
             _twilioSMS = twilioSMS.Value;
+            _EmailConfiguration = EmailConfiguration.Value;
         }
 
 
@@ -137,13 +141,15 @@ namespace ServiceManager.Controllers
         {
             string[] parameterValue = { _storageAccountOptions.apiKey,
                                         _storageAccountOptions.authDomain,
-                                        _storageAccountOptions.bucket
+                                        _storageAccountOptions.bucket,
+                                        _storageAccountOptions.AuthEmail,
+                                        _storageAccountOptions.AuthPassword
                                        };
 
             return Json(parameterValue.ToList());
         }
 
-        //  [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> AddUserRoles(string uRole, string uEmail)
         {
@@ -179,7 +185,7 @@ namespace ServiceManager.Controllers
                         userPhoneNumber = userPhoneNumber.Replace(" ", "").Replace("(", "").Replace(")", "").Replace("-", "");
                         Console.WriteLine("User Number " + userPhoneNumber);
                         TwilioClient.Init(_twilioSMS.accountSid, _twilioSMS.authToken);
-                        var to = new PhoneNumber(_twilioSMS.statePerfix + userPhoneNumber);
+                        var to = new PhoneNumber(userPhoneNumber);
                         var SMSmessage = MessageResource.Create(
                             to,
                             from: new PhoneNumber(_twilioSMS.TwilioNumber),
@@ -224,7 +230,7 @@ namespace ServiceManager.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Manager,Contractor")]
+       // [Authorize(Roles = "Admin,Manager,Contractor")]
         public JsonResult getMetaData(int id)
         {
             var metadataQuery = (from m in _context.MetaData
@@ -248,7 +254,7 @@ namespace ServiceManager.Controllers
 
 
         [HttpGet]
-        //   [Authorize(Roles = "Admin,Manager")]
+        [Authorize(Roles = "Admin,Manager")]
         public JsonResult ListUserRoles(int RoleIdFil)
         {
             var genreQuery2 = (from m in _context.UserRoles
@@ -326,7 +332,7 @@ namespace ServiceManager.Controllers
 
 
 
-        [Authorize(Roles = "Admin,Manager,Contractor")]
+       // [Authorize(Roles = "Admin,Manager,Contractor")]
         // GET: WorkOrders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -334,38 +340,27 @@ namespace ServiceManager.Controllers
             {
                 return NotFound();
             }
-
-           
-
-
-
             var workOrder = await _context.WorkOrder
                 .FirstOrDefaultAsync(m => m.WorkServiceID == id);
 
-            ApplicationUser appuser = await GetCurrentUser();
-            var useremail = appuser.Email.ToString();
+           // ApplicationUser appuser = await GetCurrentUser();
+           // var useremail = appuser.Email.ToString();
 
-            bool isAdmin = await _userManager.IsInRoleAsync(appuser, "Admin");
-            bool isManager = await _userManager.IsInRoleAsync(appuser, "Manager");
+           // bool isAdmin = await _userManager.IsInRoleAsync(appuser, "Admin");
+           // bool isManager = await _userManager.IsInRoleAsync(appuser, "Manager");
 
-            if ((workOrder.Contractor_Assigned != useremail) && (isAdmin == false) && (isManager == false))
+           // if ((workOrder.Contractor_Assigned != useremail) && (isAdmin == false) && (isManager == false))
+           // {
+           //     return new ForbidResult();
+           // }
+           if (workOrder == null)
             {
-                return new ForbidResult();
+                return NotFound();
             }
             else
             {
                 return View(workOrder);
             }
-
-
-
-            if (workOrder == null)
-            {
-                return NotFound();
-            }
-
-            return View(workOrder);
-
         }
 
 
@@ -398,7 +393,7 @@ namespace ServiceManager.Controllers
         public async Task<IActionResult> Create([Bind("WorkServiceID,Property_Address,Floor,Unit,WorkServiceName,WorkService_Description,RequestedBy,Requested_Date,Contractor_Assigned,Contractor_Comments,Contractor_Start_Date,Contractor_Completion_Date,Service_Status,FolderUrl,Inspected_By,Date_Inspected,Inspection_Comments")] WorkOrder workOrder, IFormCollection form)
         {
 
-            string uemail = Request.Form["Contractortxt"];
+           
             string eventType = Request.Form["FolderUrl"];
             string Radiobox1 = Request.Form["ImageChoice1"];
             string Radiobox2 = Request.Form["ImageChoice2"];
@@ -457,6 +452,8 @@ namespace ServiceManager.Controllers
                     byte[] bytes = Encoding.UTF8.GetBytes(data);
                     file1.Write(bytes, 0, bytes.Length);
                     file1.Dispose();
+
+                    
                     FileStream file2 = new FileStream(fileLoc, FileMode.Open, FileAccess.Read);
 
                     var auth = new FirebaseAuthProvider(new FirebaseConfig(_storageAccountOptions.apiKey));
@@ -472,9 +469,11 @@ namespace ServiceManager.Controllers
                         .Child(eventType)
                         .Child(useremail + ".txt")
                         .PutAsync(file2, cancellation.Token);
+                       
                     try
                     {
                         ViewBag.p = await task;
+                        file2.Dispose();
                     }
                     catch (Exception ex)
                     {
@@ -501,19 +500,20 @@ namespace ServiceManager.Controllers
                 {
                     try
                     {
+                        string uemail = workOrder.Contractor_Assigned;
                         var userPhoneNumber = _context.Users.Where(s => s.Email == uemail)
                             .Select(s => new
                             {
                                 s.PhoneNumber
                             })
                             .FirstOrDefault().PhoneNumber.ToString();
-                        userPhoneNumber = userPhoneNumber.Replace(" ", "").Replace("(", "").Replace(")", "").Replace("-", "");
+
                         TwilioClient.Init(_twilioSMS.accountSid, _twilioSMS.authToken);
-                        var to = new PhoneNumber(_twilioSMS.statePerfix + userPhoneNumber);
+                        var to = new PhoneNumber(userPhoneNumber);
                         var SMSmessage = MessageResource.Create(
                             to,
                             from: new PhoneNumber(_twilioSMS.TwilioNumber),
-                            body: $"Hello {uemail} !!!, You have been assigned new Work Order Service Request");
+                            body: $"Hello {uemail} !!!, You have been assigned a new Work Order Service Request");
                     }
                     catch (Exception ex)
                     {
@@ -521,7 +521,6 @@ namespace ServiceManager.Controllers
 
                     }
                 }
-
 
 
 
@@ -572,6 +571,7 @@ namespace ServiceManager.Controllers
             string eventType = Request.Form["FolderUrl"];
             string WOStatus = Request.Form["Service_Status"];
             string uEmail = Request.Form["RequestedBy"];
+            string uConEmail = Request.Form["Contractor_Assigned"];
             int idNo = Convert.ToInt32(Request.Form["WorkServiceID"]);
             var file = form.Files.FirstOrDefault();
             if (id != workOrder.WorkServiceID)
@@ -634,7 +634,7 @@ namespace ServiceManager.Controllers
                         MetaUpdate.StatusModifiedBy = userFullName;
                         MetaUpdate.ModifiedStatusDate = DateTime.Now; 
                         _context.Update(MetaUpdate);
-                        // Send SMS message to Manager when Contractor change Service Request Status
+                       // Send SMS message to Manager when Contractor change Service Request Status
                         if (_twilioSMS.Active == "true")
                         {
                             try
@@ -646,20 +646,36 @@ namespace ServiceManager.Controllers
                                     })
                                     .FirstOrDefault().PhoneNumber.ToString();
                                 userPhoneNumber = userPhoneNumber.Replace(" ", "").Replace("(", "").Replace(")", "").Replace("-", "");
-                                TwilioClient.Init(_twilioSMS.accountSid, _twilioSMS.authToken);
-                                var to = new PhoneNumber(_twilioSMS.statePerfix + userPhoneNumber);
+                                Twilio.TwilioClient.Init(_twilioSMS.accountSid, _twilioSMS.authToken);
+                                var to = new PhoneNumber(userPhoneNumber);
                                 var SMSmessage = MessageResource.Create(
                                     to,
                                     from: new PhoneNumber(_twilioSMS.TwilioNumber),
-                                    body: $"Contractor {uEmail}, has changed Service Status to from {updatedStatus} to {WOStatus}.");
+                                    body: $"Contractor {uConEmail}, has changed Service Status from {updatedStatus} to {WOStatus}.");
                             }
                             catch (Exception ex)
                             {
                                 Console.WriteLine($" Registration Failure : {ex.Message} ");
-                             
+
                             }
                         }
-
+                        try
+                        {
+                            SmtpClient client = new System.Net.Mail.SmtpClient(_EmailConfiguration.SmtpServer, Convert.ToInt32(_EmailConfiguration.Port));
+                            client.UseDefaultCredentials = false;
+                            client.EnableSsl = true;
+                            client.Credentials = new NetworkCredential(_EmailConfiguration.Username, _EmailConfiguration.Password);
+                            MailMessage mailMessage = new MailMessage();
+                            mailMessage.From = new MailAddress(_EmailConfiguration.From);
+                            mailMessage.To.Add("arminrazic@hotmail.com");
+                            mailMessage.Body = "Status Changed";
+                            mailMessage.Subject = "Status Changed";
+                            client.Send(mailMessage);
+                        }
+                        catch (Exception ex)
+                        {
+                         Console.WriteLine($" Send Email Failure : {ex.Message} ");
+                        }
 
                     }
                     else
