@@ -224,8 +224,9 @@
 
                 storageRef.child(eve + "/" + name).delete().then(function() {
                            $('#dp').empty();
-                           $('#dp').append("<b>Image deleted from "+ eve +" folder!</b>");
-                            window.location.reload();
+                           $('#dp').append("<b>Image deleted from " + eve + " folder!</b>");
+                           var removed = "#gallery > #"+ clicked_id;
+                           $(removed).remove();
                         }).catch(function(error) {
                            $('#dp').empty();
                            $('#dp').append( "<b>Error occured trying to delete image!</b>");

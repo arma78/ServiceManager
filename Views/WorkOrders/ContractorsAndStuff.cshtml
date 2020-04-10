@@ -184,7 +184,7 @@
         }
 
     async function AddUserRole()
-    {   $('#AddRoleSpinner').empty();
+    {   $('#AddRoleSpinner').remove();
         $('#AddRoleUser').append("<span class='spinner spinner-border spinner-border-sm mr-3' id='AddRoleSpinner' role='status' aria-hidden='true'></span>");
         $('#basicExampleModal').modal('hide');
         $('#AddRoleSpinner').show();
@@ -237,7 +237,7 @@
      }
      async function RemoveUserRole()
      { 
-         $('#RemoveRoleSpinner').empty();
+         $('#RemoveRoleSpinner').remove();
          $('#RemoveRoleUser').append("<span class='spinner spinner-border spinner-border-sm mr-3' id='RemoveRoleSpinner' role='status' aria-hidden='true'></span>");
          $('#basicExampleModal1').modal('hide');
          $('#RemoveRoleSpinner').show();

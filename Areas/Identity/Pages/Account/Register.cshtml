@@ -34,7 +34,7 @@
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Input.PhoneNumberCountryCode"></label>
+                <label asp-for="Input.PhoneNumberCountryCode">Please, Select your Country's Dialing Code</label>
                 <select asp-for="Input.PhoneNumberCountryCode" asp-items="Model.AvailableCountries" id="cCode" onchange="SelectedCountry()" class="form-control"></select>
                 <span asp-validation-for="Input.PhoneNumberCountryCode" class="text-danger"></span>
             </div>

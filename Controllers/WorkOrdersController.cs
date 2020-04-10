@@ -271,11 +271,8 @@ namespace ServiceManager.Controllers
             return Json(genreQuery2);
         }
 
-        [HttpPost]
-        public ActionResult Progress()
-        {
-            return this.Content(Startup.Progress.ToString());
-        }
+ 
+
 
         [HttpGet]
         public async Task<IActionResult> InspectionValidation(string formInitiator)
@@ -373,7 +370,8 @@ namespace ServiceManager.Controllers
             var userId = user?.Id;
             string mail = user.Result.Email;
             ViewBag.CurUser = mail;
-            UserList = _context.Users.OrderBy(a => a.Email).Select(a =>
+            //Only Users with Confirmed Email Account
+            UserList = _context.Users.Where(a => a.EmailConfirmed == true).OrderBy(a => a.Email).Select(a =>
                                 new SelectListItem
                                 {
                                     Value = a.Email,

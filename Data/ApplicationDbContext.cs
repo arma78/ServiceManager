@@ -9,14 +9,20 @@ namespace ServiceManager.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, AppRole, int>
     {
+        
+        
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+           
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
+           
             base.OnModelCreating(builder);
+
             builder.Entity<MetaData>();
             builder.Entity<ApplicationUser>().Ignore(e => e.FullName);
            

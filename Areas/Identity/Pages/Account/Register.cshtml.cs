@@ -32,13 +32,15 @@ namespace ServiceManager.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+       // private readonly Microsoft.AspNetCore.Identity.UI.Services.IEmailSender _emailSender;
+        private readonly ServiceManager.Models.IEmailSender _emailSenderCustom;
         private readonly TwilioSMS _twilioSMS;
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
+           // Microsoft.AspNetCore.Identity.UI.Services.IEmailSender emailSender,
+            ServiceManager.Models.IEmailSender emailSenderCustom,
             ApplicationDbContext context,
             CountryService countryService,
             IOptionsSnapshot<TwilioSMS> twilioSMS)
@@ -47,7 +49,8 @@ namespace ServiceManager.Areas.Identity.Pages.Account
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _emailSender = emailSender;
+           // _emailSender = emailSender;
+            _emailSenderCustom = emailSenderCustom;
             _twilioSMS = twilioSMS.Value;
             AvailableCountries = countryService.GetCountries();
         }
@@ -167,12 +170,17 @@ namespace ServiceManager.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                   
+                 
+                    var message = new Message(new string[] { Input.Email }, "Confirmation email link", $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.", null);
+                    await _emailSenderCustom.SendEmailAsync(message);
+
+
+                   // await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                      //  $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
                     }
                     else

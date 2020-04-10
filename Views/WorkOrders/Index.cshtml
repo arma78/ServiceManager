@@ -6,15 +6,12 @@
 }
 
 <br />
-<hr />
+<hr style="background-color:Highlight" />
 
 <p>
     @if (User.Identity.IsAuthenticated)
     {
-    @if (User.IsInRole("Manager"))
-        {
-    <a asp-action="Create"><span class="fas fa-file" aria-hidden="true"> Create New</span></a>
-        }
+        <a asp-action="Create"><span class="fas fa-file" aria-hidden="true"> Create New</span></a>
     }
 </p>
 
@@ -26,7 +23,7 @@
                 <span class="fas fa-search" aria-hidden="true"></span> Search
             </button> |
             <a asp-action="Index"><span class="fas fa-power-off" aria-hidden="true"> Reset to Full List</span></a>
-</p>
+        </p>
     </div>
 </form>
 <br />
@@ -72,35 +69,35 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.WorkServiceName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Property_Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Requested_Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Contractor_Assigned)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Service_Status)
-            </td>
-            <td>
-            <td>
-                <div>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WorkServiceName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Property_Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Requested_Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Contractor_Assigned)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Service_Status)
+                </td>
+                <td>
+                <td>
+                    <div>
                         <a asp-action="Details" asp-route-id="@item.WorkServiceID"><span class="fas fa-info" aria-hidden="true"> | </span></a>
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.WorkServiceID"><span class="fas fa-edit" aria-hidden="true"> | </span></a>
-                        <a asp-action="Delete" asp-route-id="@item.WorkServiceID"><span class="fas fa-eraser" aria-hidden="true"></span></a>
-                    }
-                </div>
-                
-</td>
-        </tr>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.WorkServiceID"><span class="fas fa-edit" aria-hidden="true"> | </span></a>
+                            <a asp-action="Delete" asp-route-id="@item.WorkServiceID"><span class="fas fa-eraser" aria-hidden="true"></span></a>
+                        }
+                    </div>
+
+                </td>
+            </tr>
         }
     </tbody>
 </table>

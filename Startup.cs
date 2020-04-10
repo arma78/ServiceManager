@@ -1,30 +1,24 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using ServiceManager.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ServiceManager.Models;
-using ReflectionIT.Mvc.Paging;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using AutoMapper;
+using ServiceManager.Factory;
 
 namespace ServiceManager
 {
     public class Startup
     {
-        public static int Progress { get; set; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-           
         }
 
         public IConfiguration Configuration { get; }
@@ -35,16 +29,43 @@ namespace ServiceManager
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<CountryService>();
             services.Configure<StorageAccountOptions>(Configuration.GetSection("AccessKey"));
             services.Configure<TwilioSMS>(Configuration.GetSection("TwilioSMS"));
             services.Configure<EmailConfiguration>(Configuration.GetSection("EmailConfiguration"));
-            services.AddIdentity<ApplicationUser, AppRole>()
-            .AddDefaultTokenProviders()
+            var emailConfig = Configuration
+            .GetSection("EmailConfiguration")
+            .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            services.AddScoped<IEmailSender, EmailSender>();
+
+            services.AddAutoMapper(typeof(Startup));
+
+            services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.AddIdentity<ApplicationUser, AppRole>(options =>
+            {
+                // Configure identity options here.
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = true;
+            })
+            .AddRoleManager<RoleManager<AppRole>>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultUI()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddDefaultTokenProviders();
+            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomClaimsFactory>();
+            services.Configure<DataProtectionTokenProviderOptions>(opt =>
+            opt.TokenLifespan = TimeSpan.FromHours(1));
             services.AddControllersWithViews();
             services.AddRazorPages();
-            services.AddSingleton<CountryService>();
+            
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,12 +85,9 @@ namespace ServiceManager
             }
            
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

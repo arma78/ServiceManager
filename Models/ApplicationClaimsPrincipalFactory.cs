@@ -11,11 +11,11 @@ using System.Security.Claims;
 
 namespace ServiceManager.Models
 {
-    public class AppClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, IdentityRole>
+    public class AppClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, AppRole>
     {
         public AppClaimsPrincipalFactory(
             UserManager<ApplicationUser> userManager
-            , RoleManager<IdentityRole> roleManager
+            , RoleManager<AppRole> roleManager
             , IOptions<IdentityOptions> optionsAccessor)
         : base(userManager, roleManager, optionsAccessor)
         { }
