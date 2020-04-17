@@ -138,7 +138,12 @@
                     count++;
                     
                     imageRef.getDownloadURL().then(function (url) {
-                         
+                       // var x = url[i].substring(3, url[i].indexOf("?"));
+                       // console.log(x);
+                         //   if (x == 'txt')
+                          //      {
+                          //      this.splice(i, 1);
+                          //      }
                             let urlimg = url;
                             let name = urlimg.substr(urlimg.indexOf('%2F') + 3, (urlimg.indexOf('?')) - (urlimg.indexOf('%2F') + 3));
                             name = name.replace('%20', ' ');
@@ -147,8 +152,9 @@
 
                             if (i == 0) {
                                 $("#carInd").append("<li class='active' data-target='#myCarousel' data-slide-to='" + i + "'></li>")
-
+                                
                                 if (extension == 'txt') {
+                                    
                                     $("#carInner").append("<div class='carousel-item active'><img  src='/images/text.png'></div>")
                                 }
                                 else if (extension == 'pdf') {

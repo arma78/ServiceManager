@@ -6,13 +6,20 @@
     border-style:solid;
 }
 
+
+#ErrorLogin {
+    display: none;
+}
+#InputEmailMessage {
+    display: none;
+}
 .myInspection {
     border: 1px;
     border-color: saddlebrown;
     border-style: solid;
-    background-color:#eed592;
-    margin:3px;
-    outline:3px;
+    background-color: #eed592;
+    margin: 3px;
+    outline: 3px;
 }
 
 

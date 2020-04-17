@@ -13,6 +13,9 @@ namespace ServiceManager.Models
         [PersonalData, Required, StringLength(40)]
         public string Professional_Skill { get; set; }
 
+        [PersonalData, StringLength(6)]
+        public string PhoneCodeValidator { get; set; }
+
         public string FullName { get { return $"{FirstName} {LastName}"; } }
     }
 }

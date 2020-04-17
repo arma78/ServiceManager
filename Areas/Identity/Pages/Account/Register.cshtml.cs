@@ -28,6 +28,24 @@ namespace ServiceManager.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
+
+      
+        public static string RandomString()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var stringChars = new char[6];
+            var random = new Random();
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            var finalString = new String(stringChars);
+
+            return finalString;
+        }
+
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -138,6 +156,7 @@ namespace ServiceManager.Areas.Identity.Pages.Account
                     if (numberDetails?.Carrier != null
                         && numberDetails.Carrier.TryGetValue("type", out var phoneNumberType)
                         && phoneNumberType == "landline")
+                       
                     {
                         ModelState.AddModelError($"{nameof(Input)}.{nameof(Input.PhoneNumber)}",
                             $"The number you entered does not appear to be capable of receiving SMS ({phoneNumberType}). Please enter a different value and try again");
@@ -170,14 +189,17 @@ namespace ServiceManager.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code },
                         protocol: Request.Scheme);
 
+
+
                    
-                 
-                    var message = new Message(new string[] { Input.Email }, "Confirmation email link", $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.", null);
-                    await _emailSenderCustom.SendEmailAsync(message);
 
+                    // var message = new Message(new string[] { Input.Email }, "Confirmation email link", $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.", null);
+                    // await _emailSenderCustom.SendEmailAsync(message);
+                    // GmailServiceSend gs = new GmailServiceSend();
+                    // gs.GenerateEmail(Input.Email,"soltechnacorp@gmail.com" , "Confirmation email link", "Test");
+                    // await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    //  $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                   // await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                      //  $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -190,20 +212,32 @@ namespace ServiceManager.Areas.Identity.Pages.Account
                         if (_twilioSMS.Active == "true")
                         {
                             try
-                            {
-                                var to = new PhoneNumber("+38762912141");
-                                var SMSmessage = MessageResource.Create(
-                                    to,
-                                    from: new PhoneNumber(_twilioSMS.TwilioNumber),
-                                    body: $"New User:  {user} has been registered!");
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($" Registration Failure to send sms: {ex.Message} ");
-                            }
-                        }
+                              {
+                                    string phonevalidator = RandomString();
+                                    var to = new PhoneNumber("+38762912141");
+                                    var SMSmessage = MessageResource.Create(
+                                        to,
+                                        from: new PhoneNumber(_twilioSMS.TwilioNumber),
+                                        body: $"New User:  {user} has been registered!");
 
-                        return LocalRedirect(returnUrl);
+                                            var to2 = new PhoneNumber(Input.PhoneNumber);
+                                            var SMSmessage2 = MessageResource.Create(
+                                                to2,
+                                                from: new PhoneNumber(_twilioSMS.TwilioNumber),
+                                                body: $"Hello {user}, please enter this code {phonevalidator} to confirm your registration!");
+
+                                    var PhoneCode = _context.Users.Single(p => p.Email == Input.Email);
+                                    PhoneCode.PhoneCodeValidator = phonevalidator;
+                                    _context.SaveChanges();
+                            }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($" Registration Failure to send sms: {ex.Message} ");
+                                
+                            }
+                           
+                        }
+                        return LocalRedirect("/Identity/Account/Login");
                     }
 
                 }
